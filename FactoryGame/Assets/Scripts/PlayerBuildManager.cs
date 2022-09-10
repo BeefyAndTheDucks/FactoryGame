@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class PlayerBuildManager : MonoBehaviour
 {
-
-    public Buildable[] buildables;
-
     public GameObject buildMenuGameObject;
 
-    bool buildMode;
+    public BuildMenu buildMenu;
+
+    public int canBeBuiltOnLayer;
+
+    FirstPersonController character;
+    Buildable[] buildables;
+
+    public static bool buildMode;
     bool buildMenuOpen;
     Vector3 buildPoint;
-    Buildable selected;
+    GameObject lookingAt;
+    [HideInInspector]
+    public Buildable selected;
+    GameObject previewGameObject;
 
     Buildable GetBuildableWithName(string name)
     {
@@ -27,31 +34,84 @@ public class PlayerBuildManager : MonoBehaviour
         return null;
     }
 
+    void Start()
+    {
+        character = gameObject.GetComponent<PlayerHealthManager>().character;
+        buildables = buildMenu.GetBuildables();
+    }
+
+    void OnValidate()
+    {
+        buildMenu.buildManager = this;
+    }
+
     void Update()
     {
         if (buildMode)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, canBeBuiltOnLayer)) // If it succeded getting object
             {
                 buildPoint = hit.point;
+                lookingAt = hit.transform.gameObject;
                 Debug.DrawLine(ray.origin, hit.point, Color.blue);
+                Preview();
             }
         }
         if (Input.GetButtonDown("build"))
         {
-            buildMenuOpen = !buildMenuOpen;
-            buildMenuGameObject.SetActive(buildMenuOpen);
+            if (!buildMode)
+            {
+                ToggleBuildMenu();
+            } else
+            {
+                buildMode = false;
+            }
+        }
+        if (Input.GetButtonDown("Fire1"))
+        {
+            if (buildMode)
+            {
+                Build();
+            }
         }
     }
-    
-    public void SelectItem(string name)
+
+    void ToggleBuildMenu()
     {
+        buildMenuOpen = !buildMenuOpen;
+        buildMenuGameObject.SetActive(buildMenuOpen);
+
+        Cursor.lockState = (buildMenuOpen) ? CursorLockMode.None : CursorLockMode.Locked;
+        character.playerCanMove = !buildMenuOpen;
+        character.cameraCanMove = !buildMenuOpen;
+        character.enableHeadBob = !buildMenuOpen;
+
+        Debug.Log("Toggle Build menu to: " + buildMenuOpen);
+    }
+
+    void Build()
+    {
+        // Build Logic
+    }
+
+    void Preview()
+    {
+        if (previewGameObject != null)
+            Destroy(previewGameObject);
+        previewGameObject = Instantiate(selected.previewPrefab, buildPoint, Quaternion.identity);
+    }
+    
+    public void SelectBuildable(string name)
+    {
+        Debug.Log("Selecting Buildable");
         Buildable tmp = GetBuildableWithName(name);
         if (tmp != null)
         {
+            ToggleBuildMenu();
+            Debug.Log("Found buildable!");
             selected = tmp;
+            buildMode = true;
         } else
         {
             Debug.LogError("Buildable \"" + name + "\" does not exist.");

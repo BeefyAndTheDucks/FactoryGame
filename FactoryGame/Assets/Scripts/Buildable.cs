@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Buildable
+[CreateAssetMenu]
+public class Buildable : ScriptableObject
 {
 
-    public string name;
-    public GameObject prefab;
+    public GameObject buildPrefab;
+    public GameObject previewPrefab;
+    public Sprite icon;
 
 }

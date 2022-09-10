@@ -6,8 +6,8 @@ public class BuildMenuCategory
 {
 
     public string name;
-    [HideInInspector]
-    public Button button;
     public Sprite icon;
+
+    public Buildable[] buildables;
 
 }
