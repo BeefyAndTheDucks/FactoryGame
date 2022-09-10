@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Test
   m_EditorClassIdentifier: 
   buildPrefab: {fileID: 1298566822435012193, guid: 5081b2883a2607748acc6858cb913add, type: 3}
-  previewPrefab: {fileID: 1298566822435012193, guid: 5081b2883a2607748acc6858cb913add, type: 3}
+  previewPrefab: {fileID: 1298566822435012193, guid: 2684dbff04821e94988441d26cd801ea, type: 3}
   icon: {fileID: 21300000, guid: 9ed7633421f6ed34a983336e05658829, type: 3}
+  buildOffset: {x: 0, y: 0.5, z: 0}

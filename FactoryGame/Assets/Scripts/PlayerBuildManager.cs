@@ -5,21 +5,26 @@ using UnityEngine;
 public class PlayerBuildManager : MonoBehaviour
 {
     public GameObject buildMenuGameObject;
-
     public BuildMenu buildMenu;
-
     public int canBeBuiltOnLayer;
+    public Material previewMaterial;
 
-    FirstPersonController character;
-    Buildable[] buildables;
+    [SerializeField]
+    public static Color red = new Color32(255, 0, 0, 123);
+    [SerializeField]
+    public static Color green = new Color32(0, 255, 0, 123);
 
+    [HideInInspector]
     public static bool buildMode;
+    [HideInInspector]
+    public Buildable selected;
+
     bool buildMenuOpen;
     Vector3 buildPoint;
     GameObject lookingAt;
-    [HideInInspector]
-    public Buildable selected;
     GameObject previewGameObject;
+    FirstPersonController character;
+    Buildable[] buildables;
 
     Buildable GetBuildableWithName(string name)
     {
@@ -36,6 +41,7 @@ public class PlayerBuildManager : MonoBehaviour
 
     void Start()
     {
+        previewMaterial.color = green;
         character = gameObject.GetComponent<PlayerHealthManager>().character;
         buildables = buildMenu.GetBuildables();
     }
@@ -52,7 +58,7 @@ public class PlayerBuildManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, canBeBuiltOnLayer)) // If it succeded getting object
             {
-                buildPoint = hit.point;
+                buildPoint = hit.point + selected.buildOffset;
                 lookingAt = hit.transform.gameObject;
                 Debug.DrawLine(ray.origin, hit.point, Color.blue);
                 Preview();
@@ -66,6 +72,8 @@ public class PlayerBuildManager : MonoBehaviour
             } else
             {
                 buildMode = false;
+                if (previewGameObject != null)
+                    Destroy(previewGameObject);
             }
         }
         if (Input.GetButtonDown("Fire1"))
@@ -74,6 +82,12 @@ public class PlayerBuildManager : MonoBehaviour
             {
                 Build();
             }
+        }
+        if (Input.GetButtonDown("Cancel") && buildMode)
+        {
+            buildMode = false;
+            if (previewGameObject != null)
+                Destroy(previewGameObject);
         }
     }
 
@@ -93,6 +107,7 @@ public class PlayerBuildManager : MonoBehaviour
     void Build()
     {
         // Build Logic
+        Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity);
     }
 
     void Preview()
@@ -104,12 +119,10 @@ public class PlayerBuildManager : MonoBehaviour
     
     public void SelectBuildable(string name)
     {
-        Debug.Log("Selecting Buildable");
         Buildable tmp = GetBuildableWithName(name);
         if (tmp != null)
         {
             ToggleBuildMenu();
-            Debug.Log("Found buildable!");
             selected = tmp;
             buildMode = true;
         } else
