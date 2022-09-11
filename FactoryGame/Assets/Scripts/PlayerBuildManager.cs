@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using UnityEngine.UI;
 
 public class PlayerBuildManager : MonoBehaviour
 {
     public GameObject buildMenuGameObject;
     public BuildMenu buildMenu;
     public int canBeBuiltOnLayer;
+    public float deconstructTime = 1f;
     public Material previewMaterial;
+    public Material deconstructMaterial;
+    public RectTransform deconstructTransform;
+    public GameObject deconstructParent;
 
     [SerializeField]
     public static Color red = new Color32(255, 0, 0, 123);
     [SerializeField]
     public static Color green = new Color32(0, 255, 0, 123);
+    public static bool canPlace = true;
 
     [HideInInspector]
     public static bool buildMode;
@@ -20,11 +26,14 @@ public class PlayerBuildManager : MonoBehaviour
     public Buildable selected;
 
     bool buildMenuOpen;
+    bool deconstructMode;
     Vector3 buildPoint;
     GameObject lookingAt;
     GameObject previewGameObject;
     FirstPersonController character;
     Buildable[] buildables;
+    Material oldMaterial;
+    float deconstructFrame;
 
     Buildable GetBuildableWithName(string name)
     {
@@ -41,6 +50,7 @@ public class PlayerBuildManager : MonoBehaviour
 
     void Start()
     {
+        deconstructFrame = deconstructTime;
         previewMaterial.color = green;
         character = gameObject.GetComponent<PlayerHealthManager>().character;
         buildables = buildMenu.GetBuildables();
@@ -53,41 +63,96 @@ public class PlayerBuildManager : MonoBehaviour
 
     void Update()
     {
-        if (buildMode)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, canBeBuiltOnLayer)) // If it succeded getting object
-            {
-                buildPoint = hit.point + selected.buildOffset;
-                lookingAt = hit.transform.gameObject;
-                Debug.DrawLine(ray.origin, hit.point, Color.blue);
-                Preview();
-            }
-        }
+        if (lookingAt != null && deconstructMode)
+            lookingAt.GetComponent<Renderer>().material = oldMaterial;
         if (Input.GetButtonDown("build"))
         {
             if (!buildMode)
             {
+                if (deconstructMode)
+                {
+                    deconstructMode = false;
+                    if (lookingAt != null && oldMaterial != null)
+                        lookingAt.GetComponent<Renderer>().material = oldMaterial;
+                }
                 ToggleBuildMenu();
             } else
             {
                 buildMode = false;
+                deconstructMode = false;
                 if (previewGameObject != null)
                     Destroy(previewGameObject);
+                if (lookingAt != null && oldMaterial != null)
+                    lookingAt.GetComponent<Renderer>().material = oldMaterial;
             }
         }
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1"))
         {
-            if (buildMode)
+            if (buildMode && Input.GetButtonDown("Fire1"))
             {
                 Build();
+            } else if (deconstructMode && lookingAt != null)
+            {
+                if (deconstructFrame <= 0)
+                {
+                    Deconstruct();
+                    deconstructFrame = deconstructTime;
+                    deconstructParent.SetActive(false);
+                } else
+                {
+                    deconstructParent.SetActive(true);
+                    deconstructFrame -= Time.deltaTime;
+                    Debug.Log(deconstructFrame * 220);
+                    deconstructTransform.offsetMax = new Vector2(-(deconstructFrame * 220), deconstructTransform.offsetMax.y);
+                    Debug.Log(deconstructFrame);
+                }
             }
+        } else
+        {
+            deconstructFrame = deconstructTime;
+            deconstructParent.SetActive(false);
         }
         if (Input.GetButtonDown("Cancel") && buildMode)
         {
             buildMode = false;
+            deconstructMode = false;
             if (previewGameObject != null)
                 Destroy(previewGameObject);
+            if (lookingAt != null && oldMaterial != null)
+                lookingAt.GetComponent<Renderer>().material = oldMaterial;
+        }
+        if (Input.GetButtonDown("deconstruct"))
+        {
+            buildMode = false;
+            deconstructMode = true;
+        }
+        if (buildMode || deconstructMode)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, canBeBuiltOnLayer)) // If it succeded getting object
+            {
+                buildPoint = hit.point;
+                if (selected != null)
+                    buildPoint = hit.point + selected.buildOffset;
+                if (lookingAt != null)
+                    if (lookingAt != hit.transform.gameObject && deconstructMode)
+                        lookingAt.GetComponent<Renderer>().material = oldMaterial;
+                lookingAt = hit.transform.gameObject;
+                Debug.DrawLine(ray.origin, hit.point, Color.blue);
+                if (buildMode)
+                {
+                    Preview();
+                } else
+                {
+                    if (previewGameObject != null)
+                        Destroy(previewGameObject);
+                    oldMaterial = lookingAt.GetComponent<Renderer>().material;
+                    lookingAt.GetComponent<Renderer>().material = deconstructMaterial;
+                }
+            } else
+            {
+                lookingAt = null;
+            }
         }
     }
 
@@ -107,14 +172,26 @@ public class PlayerBuildManager : MonoBehaviour
     void Build()
     {
         // Build Logic
-        Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity);
+        if (canPlace)
+        {
+            Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity);
+        }
+    }
+
+    void Deconstruct()
+    {
+        if (lookingAt != null)
+        {
+            Destroy(lookingAt);
+        }
     }
 
     void Preview()
     {
-        if (previewGameObject != null)
-            Destroy(previewGameObject);
-        previewGameObject = Instantiate(selected.previewPrefab, buildPoint, Quaternion.identity);
+        if (previewGameObject == null)
+            previewGameObject = Instantiate(selected.previewPrefab, buildPoint, Quaternion.identity);
+
+        previewGameObject.transform.position = buildPoint;
     }
     
     public void SelectBuildable(string name)

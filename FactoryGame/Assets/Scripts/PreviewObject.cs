@@ -1,29 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 public class PreviewObject : MonoBehaviour
 {
     public Material previewMaterial;
     public string ignoreTag;
-    public bool canPlace = true;
 
-    List<Collider> collidedWith = new List<Collider>();
 
-    void FixedUpdate()
+    void OnTriggerEnter(Collider other)
     {
-        previewMaterial.color = canPlace ? PlayerBuildManager.red : PlayerBuildManager.green;
-        Debug.Log(canPlace);
-        collidedWith.Clear();
-        canPlace = false;
+        if (other.CompareTag(ignoreTag))
+            return;
+        PlayerBuildManager.canPlace = false;
+        previewMaterial.color = PlayerBuildManager.red;
     }
 
-    void OnTriggerStay(Collider other)
+    private void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag(ignoreTag))
+        if (other.CompareTag(ignoreTag))
             return;
-        collidedWith.Add(other);
-        canPlace = true;
+        PlayerBuildManager.canPlace = true;
+        previewMaterial.color = PlayerBuildManager.green;
     }
 
 }
