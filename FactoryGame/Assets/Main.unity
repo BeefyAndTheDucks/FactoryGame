@@ -1466,6 +1466,7 @@ MonoBehaviour:
   deconstructMaterial: {fileID: 2100000, guid: 8f1c1bcfc79b9de4a81bb9f081ebdfe5, type: 2}
   deconstructTransform: {fileID: 817605343}
   deconstructParent: {fileID: 620375417}
+  buildableTag: Buildable
   selected: {fileID: 0}
 --- !u!1 &1148315157
 GameObject:

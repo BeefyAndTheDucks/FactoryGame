@@ -13,6 +13,7 @@ public class PlayerBuildManager : MonoBehaviour
     public Material deconstructMaterial;
     public RectTransform deconstructTransform;
     public GameObject deconstructParent;
+    public string buildableTag;
 
     [SerializeField]
     public static Color red = new Color32(255, 0, 0, 123);
@@ -102,9 +103,7 @@ public class PlayerBuildManager : MonoBehaviour
                 {
                     deconstructParent.SetActive(true);
                     deconstructFrame -= Time.deltaTime;
-                    Debug.Log(deconstructFrame * 220);
                     deconstructTransform.offsetMax = new Vector2(-(deconstructFrame * 220), deconstructTransform.offsetMax.y);
-                    Debug.Log(deconstructFrame);
                 }
             }
         } else
@@ -137,7 +136,13 @@ public class PlayerBuildManager : MonoBehaviour
                 if (lookingAt != null)
                     if (lookingAt != hit.transform.gameObject && deconstructMode)
                         lookingAt.GetComponent<Renderer>().material = oldMaterial;
-                lookingAt = hit.transform.gameObject;
+                if (hit.transform.gameObject.CompareTag(buildableTag))
+                {
+                    lookingAt = hit.transform.gameObject;
+                } else
+                {
+                    lookingAt = null;
+                }
                 Debug.DrawLine(ray.origin, hit.point, Color.blue);
                 if (buildMode)
                 {
@@ -146,8 +151,11 @@ public class PlayerBuildManager : MonoBehaviour
                 {
                     if (previewGameObject != null)
                         Destroy(previewGameObject);
-                    oldMaterial = lookingAt.GetComponent<Renderer>().material;
-                    lookingAt.GetComponent<Renderer>().material = deconstructMaterial;
+                    if (lookingAt != null)
+                    {
+                        oldMaterial = lookingAt.GetComponent<Renderer>().material;
+                        lookingAt.GetComponent<Renderer>().material = deconstructMaterial;
+                    }
                 }
             } else
             {
@@ -165,8 +173,6 @@ public class PlayerBuildManager : MonoBehaviour
         character.playerCanMove = !buildMenuOpen;
         character.cameraCanMove = !buildMenuOpen;
         character.enableHeadBob = !buildMenuOpen;
-
-        Debug.Log("Toggle Build menu to: " + buildMenuOpen);
     }
 
     void Build()

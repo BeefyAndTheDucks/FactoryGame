@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -1541063076506171855}
   m_Layer: 3
   m_Name: Cube_Preview
-  m_TagString: Untagged
+  m_TagString: Buildable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,7 +96,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 2}
+  m_Size: {x: 0.99, y: 0.99, z: 0.99}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-1541063076506171855
 MonoBehaviour:
@@ -112,4 +112,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   previewMaterial: {fileID: 2100000, guid: b944ce1c7ea9fe44285c95851985dcca, type: 2}
   ignoreTag: Ground
-  canPlace: 0
