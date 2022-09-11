@@ -1461,7 +1461,7 @@ MonoBehaviour:
   buildMenuGameObject: {fileID: 1814608706}
   buildMenu: {fileID: 1795459319}
   canBeBuiltOnLayer: 3
-  deconstructTime: 1
+  deconstructTime: 2.5
   previewMaterial: {fileID: 2100000, guid: b944ce1c7ea9fe44285c95851985dcca, type: 2}
   deconstructMaterial: {fileID: 2100000, guid: 8f1c1bcfc79b9de4a81bb9f081ebdfe5, type: 2}
   deconstructTransform: {fileID: 817605343}

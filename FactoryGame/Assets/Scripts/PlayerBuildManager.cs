@@ -8,7 +8,7 @@ public class PlayerBuildManager : MonoBehaviour
     public GameObject buildMenuGameObject;
     public BuildMenu buildMenu;
     public int canBeBuiltOnLayer;
-    public float deconstructTime = 1f;
+    public float deconstructTime = 5f;
     public Material previewMaterial;
     public Material deconstructMaterial;
     public RectTransform deconstructTransform;
@@ -51,7 +51,7 @@ public class PlayerBuildManager : MonoBehaviour
 
     void Start()
     {
-        deconstructFrame = deconstructTime;
+        deconstructFrame = 1f;
         previewMaterial.color = green;
         character = gameObject.GetComponent<PlayerHealthManager>().character;
         buildables = buildMenu.GetBuildables();
@@ -97,18 +97,18 @@ public class PlayerBuildManager : MonoBehaviour
                 if (deconstructFrame <= 0)
                 {
                     Deconstruct();
-                    deconstructFrame = deconstructTime;
+                    deconstructFrame = 1f;
                     deconstructParent.SetActive(false);
                 } else
                 {
                     deconstructParent.SetActive(true);
-                    deconstructFrame -= Time.deltaTime;
+                    deconstructFrame -= Time.deltaTime * deconstructTime;
                     deconstructTransform.offsetMax = new Vector2(-(deconstructFrame * 220), deconstructTransform.offsetMax.y);
                 }
             }
         } else
         {
-            deconstructFrame = deconstructTime;
+            deconstructFrame = 1f;
             deconstructParent.SetActive(false);
         }
         if (Input.GetButtonDown("Cancel") && buildMode)
@@ -181,6 +181,7 @@ public class PlayerBuildManager : MonoBehaviour
         if (canPlace)
         {
             Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity);
+            Destroy(previewGameObject);
         }
     }
 
