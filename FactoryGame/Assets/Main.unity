@@ -1467,6 +1467,7 @@ MonoBehaviour:
   deconstructTransform: {fileID: 817605343}
   deconstructParent: {fileID: 620375417}
   buildableTag: Buildable
+  gridSize: {x: 1, y: 1, z: 1}
   selected: {fileID: 0}
 --- !u!1 &1148315157
 GameObject:

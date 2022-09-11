@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.UI;
 
 public class PlayerBuildManager : MonoBehaviour
 {
@@ -14,6 +13,7 @@ public class PlayerBuildManager : MonoBehaviour
     public RectTransform deconstructTransform;
     public GameObject deconstructParent;
     public string buildableTag;
+    public Vector3 gridSize = Vector3.one * 3;
 
     [SerializeField]
     public static Color red = new Color32(255, 0, 0, 123);
@@ -130,9 +130,13 @@ public class PlayerBuildManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, canBeBuiltOnLayer)) // If it succeded getting object
             {
-                buildPoint = hit.point;
+                buildPoint = new Vector3(Mathf.Round(hit.point.x / gridSize.x) * gridSize.x,
+                                         Mathf.Round(hit.point.y / gridSize.y) * gridSize.y,
+                                         Mathf.Round(hit.point.z / gridSize.z) * gridSize.z);
                 if (selected != null)
-                    buildPoint = hit.point + selected.buildOffset;
+                    buildPoint = new Vector3(Mathf.Round(hit.point.x / gridSize.x) * gridSize.x,
+                                             Mathf.Round(hit.point.y / gridSize.y) * gridSize.y,
+                                             Mathf.Round(hit.point.z / gridSize.z) * gridSize.z) + selected.buildOffset;
                 if (lookingAt != null)
                     if (lookingAt != hit.transform.gameObject && deconstructMode)
                         lookingAt.GetComponent<Renderer>().material = oldMaterial;
