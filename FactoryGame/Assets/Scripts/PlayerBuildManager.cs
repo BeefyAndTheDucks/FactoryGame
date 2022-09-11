@@ -14,6 +14,8 @@ public class PlayerBuildManager : MonoBehaviour
     public GameObject deconstructParent;
     public string buildableTag;
     public Vector3 gridSize = Vector3.one * 3;
+    public Transform buildableParentTransform;
+    public float reach = 10.0f;
 
     [SerializeField]
     public static Color red = new Color32(255, 0, 0, 123);
@@ -36,7 +38,7 @@ public class PlayerBuildManager : MonoBehaviour
     Material oldMaterial;
     float deconstructFrame;
 
-    Buildable GetBuildableWithName(string name)
+    public Buildable GetBuildableWithName(string name)
     {
         foreach (Buildable buildable in buildables)
         {
@@ -128,15 +130,11 @@ public class PlayerBuildManager : MonoBehaviour
         if (buildMode || deconstructMode)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, canBeBuiltOnLayer)) // If it succeded getting object
+            if (Physics.Raycast(ray, out RaycastHit hit, reach, canBeBuiltOnLayer)) // If it succeded getting object
             {
-                buildPoint = new Vector3(Mathf.Round(hit.point.x / gridSize.x) * gridSize.x,
-                                         Mathf.Round(hit.point.y / gridSize.y) * gridSize.y,
-                                         Mathf.Round(hit.point.z / gridSize.z) * gridSize.z);
+                buildPoint = new Vector3(Mathf.Round(hit.point.x / gridSize.x) * gridSize.x, Mathf.Round(hit.point.y / gridSize.y) * gridSize.y, Mathf.Round(hit.point.z / gridSize.z) * gridSize.z);
                 if (selected != null)
-                    buildPoint = new Vector3(Mathf.Round(hit.point.x / gridSize.x) * gridSize.x,
-                                             Mathf.Round(hit.point.y / gridSize.y) * gridSize.y,
-                                             Mathf.Round(hit.point.z / gridSize.z) * gridSize.z) + selected.buildOffset;
+                    buildPoint += selected.buildOffset;
                 if (lookingAt != null)
                     if (lookingAt != hit.transform.gameObject && deconstructMode)
                         lookingAt.GetComponent<Renderer>().material = oldMaterial;
@@ -161,6 +159,16 @@ public class PlayerBuildManager : MonoBehaviour
                         lookingAt.GetComponent<Renderer>().material = deconstructMaterial;
                     }
                 }
+
+                if (Input.GetButtonDown("pick") && lookingAt.GetComponent<BuiltBuildable>() != null)
+                {
+                    buildMode = true;
+                    deconstructMode = false;
+                    selected = lookingAt.GetComponent<BuiltBuildable>().buildable;
+                    if (lookingAt != null && oldMaterial != null)
+                        lookingAt.GetComponent<Renderer>().material = oldMaterial;
+                }
+
             } else
             {
                 lookingAt = null;
@@ -184,7 +192,7 @@ public class PlayerBuildManager : MonoBehaviour
         // Build Logic
         if (canPlace)
         {
-            Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity);
+            Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity, buildableParentTransform);
             Destroy(previewGameObject);
         }
     }
