@@ -13,11 +13,11 @@ TagManager:
   - RaycastIgnore
   - Water
   - UI
+  - Buildable
   - 
-  - 
-  - 
-  - 
-  - 
+  - Unwalkable
+  - Road
+  - Grass
   - 
   - 
   - 

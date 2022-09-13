@@ -24,7 +24,7 @@ public class PlayerHealthManager : MonoBehaviour
     public Sprite heart;
     public Sprite heartCracked;
 
-    private GameObject[] hearts;
+    GameObject[] hearts;
 
     public FirstPersonController character;
 
@@ -32,14 +32,17 @@ public class PlayerHealthManager : MonoBehaviour
 
     Vector3 vel;
     float yvel;
-    private int healthToLoose = 0;
+    int healthToLoose = 0;
+    int cooldown = 0;
+    static PlayerHealthManager instance;
 
-    private int cooldown = 0;
-
-    [HideInInspector] public bool alive = true;
+    [HideInInspector]
+    public bool alive = true;
 
     void Start()
     {
+        instance = this;
+
         hearts = new GameObject[heartAmount];
 
         rb = character.gameObject.GetComponent<Rigidbody>();
@@ -187,4 +190,13 @@ public class PlayerHealthManager : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
+
+    public static void TakeDamage(int amount)
+	{
+		for (int i = 0; i < amount; i++)
+		{
+            instance.currentHeartAmount--;
+		}
+        instance.RefreshHearts();
+	}
 }

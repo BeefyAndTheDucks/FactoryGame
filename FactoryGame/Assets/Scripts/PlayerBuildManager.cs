@@ -6,7 +6,7 @@ public class PlayerBuildManager : MonoBehaviour
 {
     public GameObject buildMenuGameObject;
     public BuildMenu buildMenu;
-    public int canBeBuiltOnLayer;
+    public LayerMask canBeBuiltOnLayer;
     public float deconstructTime = 5f;
     public Material previewMaterial;
     public Material deconstructMaterial;
@@ -16,6 +16,8 @@ public class PlayerBuildManager : MonoBehaviour
     public Vector3 gridSize = Vector3.one * 3;
     public Transform buildableParentTransform;
     public float reach = 10.0f;
+    public PathfindGrid pathfindGrid;
+    public bool deconstructBarReversed;
 
     [SerializeField]
     public static Color red = new Color32(255, 0, 0, 123);
@@ -96,21 +98,28 @@ public class PlayerBuildManager : MonoBehaviour
                 Build();
             } else if (deconstructMode && lookingAt != null)
             {
-                if (deconstructFrame <= 0)
+                
+                if (deconstructFrame == 1)
                 {
                     Deconstruct();
-                    deconstructFrame = 1f;
+                    deconstructFrame = 0f;
                     deconstructParent.SetActive(false);
-                } else
+                }
+                else
                 {
                     deconstructParent.SetActive(true);
-                    deconstructFrame -= Time.deltaTime * deconstructTime;
-                    deconstructTransform.offsetMax = new Vector2(-(deconstructFrame * 220), deconstructTransform.offsetMax.y);
+
+                    deconstructFrame = Mathf.Clamp01(deconstructFrame + Time.deltaTime * deconstructTime);
+                    if (deconstructBarReversed)
+                        deconstructTransform.offsetMax = new Vector2(-Mathf.Lerp(220, 0, deconstructFrame), deconstructTransform.offsetMax.y);
+                    else
+                        deconstructTransform.offsetMax = new Vector2(-Mathf.Lerp(0, 220, deconstructFrame), deconstructTransform.offsetMax.y);
                 }
+                
             }
         } else
         {
-            deconstructFrame = 1f;
+            deconstructFrame = 0f;
             deconstructParent.SetActive(false);
         }
         if (Input.GetButtonDown("Cancel") && buildMode)
@@ -194,6 +203,8 @@ public class PlayerBuildManager : MonoBehaviour
         {
             Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity, buildableParentTransform);
             Destroy(previewGameObject);
+            pathfindGrid.UpdateGrid();
+            Unit.RegeneratePath();
         }
     }
 
@@ -201,7 +212,9 @@ public class PlayerBuildManager : MonoBehaviour
     {
         if (lookingAt != null)
         {
-            Destroy(lookingAt);
+            DestroyImmediate(lookingAt);
+            pathfindGrid.UpdateGrid();
+            Unit.RegeneratePath();
         }
     }
 
