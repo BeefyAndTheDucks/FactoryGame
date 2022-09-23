@@ -64,9 +64,9 @@ public class SaveData : MonoBehaviour
                 currentObjectString = currentObjectString.Substring(name.Length+1);
 
                 // Get Position of object in string
-                float x = 0.0f;
-                float y = 0.0f;
-                float z = 0.0f;
+                float x = 0f;
+                float y = 0f;
+                float z = 0f;
 
                 string _x = "";
                 string _y = "";
@@ -82,7 +82,7 @@ public class SaveData : MonoBehaviour
                     {
                         _x += _character;
                     }
-                }
+                } // Get X
                 currentObjectString = currentObjectString.Substring(_x.Length + 1);
                 foreach (char __char in currentObjectString)
                 {
@@ -95,12 +95,12 @@ public class SaveData : MonoBehaviour
                     {
                         _y += _character;
                     }
-                }
+                } // Get Y
                 currentObjectString = currentObjectString.Substring(_y.Length + 1);
                 foreach (char __char in currentObjectString)
                 {
                     _z += __char.ToString();
-                }
+                } // Get Z
 
                 // Convert to float, then Vector3
                 x = float.Parse(_x);

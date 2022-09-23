@@ -13,11 +13,11 @@ public class PlayerBuildManager : MonoBehaviour
     public RectTransform deconstructTransform;
     public GameObject deconstructParent;
     public string buildableTag;
-    public Vector3 gridSize = Vector3.one * 3;
+    public Vector3 gridSize = Vector3.one;
     public Transform buildableParentTransform;
     public float reach = 10.0f;
-    public PathfindGrid pathfindGrid;
     public bool deconstructBarReversed;
+    public Vector3Int buildablesGridSize = Vector3Int.one * 20;
 
     [SerializeField]
     public static Color red = new Color32(255, 0, 0, 123);
@@ -29,6 +29,8 @@ public class PlayerBuildManager : MonoBehaviour
     public static bool buildMode;
     [HideInInspector]
     public Buildable selected;
+    [HideInInspector]
+    public GameObject[,,] grid;
 
     bool buildMenuOpen;
     bool deconstructMode;
@@ -59,6 +61,7 @@ public class PlayerBuildManager : MonoBehaviour
         previewMaterial.color = green;
         character = gameObject.GetComponent<PlayerHealthManager>().character;
         buildables = buildMenu.GetBuildables();
+        grid = new GameObject[buildablesGridSize.x, buildablesGridSize.y, buildablesGridSize.z];
     }
 
     void OnValidate()
@@ -69,7 +72,7 @@ public class PlayerBuildManager : MonoBehaviour
     void Update()
     {
         if (lookingAt != null && deconstructMode)
-            lookingAt.GetComponent<Renderer>().material = oldMaterial;
+            ChangeAllMaterialsInGO(lookingAt, oldMaterial);
         if (Input.GetButtonDown("build"))
         {
             if (!buildMode)
@@ -78,7 +81,7 @@ public class PlayerBuildManager : MonoBehaviour
                 {
                     deconstructMode = false;
                     if (lookingAt != null && oldMaterial != null)
-                        lookingAt.GetComponent<Renderer>().material = oldMaterial;
+                        ChangeAllMaterialsInGO(lookingAt, oldMaterial);
                 }
                 ToggleBuildMenu();
             } else
@@ -88,7 +91,7 @@ public class PlayerBuildManager : MonoBehaviour
                 if (previewGameObject != null)
                     Destroy(previewGameObject);
                 if (lookingAt != null && oldMaterial != null)
-                    lookingAt.GetComponent<Renderer>().material = oldMaterial;
+                    ChangeAllMaterialsInGO(lookingAt, oldMaterial);
             }
         }
         if (Input.GetButton("Fire1"))
@@ -99,7 +102,7 @@ public class PlayerBuildManager : MonoBehaviour
             } else if (deconstructMode && lookingAt != null)
             {
                 
-                if (deconstructFrame == 1)
+                if (deconstructFrame >= 1)
                 {
                     Deconstruct();
                     deconstructFrame = 0f;
@@ -129,7 +132,7 @@ public class PlayerBuildManager : MonoBehaviour
             if (previewGameObject != null)
                 Destroy(previewGameObject);
             if (lookingAt != null && oldMaterial != null)
-                lookingAt.GetComponent<Renderer>().material = oldMaterial;
+                ChangeAllMaterialsInGO(lookingAt, oldMaterial);
         }
         if (Input.GetButtonDown("deconstruct"))
         {
@@ -146,7 +149,7 @@ public class PlayerBuildManager : MonoBehaviour
                     buildPoint += selected.buildOffset;
                 if (lookingAt != null)
                     if (lookingAt != hit.transform.gameObject && deconstructMode)
-                        lookingAt.GetComponent<Renderer>().material = oldMaterial;
+                        ChangeAllMaterialsInGO(lookingAt, oldMaterial);
                 if (hit.transform.gameObject.CompareTag(buildableTag))
                 {
                     lookingAt = hit.transform.gameObject;
@@ -164,8 +167,8 @@ public class PlayerBuildManager : MonoBehaviour
                         Destroy(previewGameObject);
                     if (lookingAt != null)
                     {
-                        oldMaterial = lookingAt.GetComponent<Renderer>().material;
-                        lookingAt.GetComponent<Renderer>().material = deconstructMaterial;
+                        oldMaterial = lookingAt.GetComponentInChildren<Renderer>().material;
+                        ChangeAllMaterialsInGO(lookingAt, deconstructMaterial);
                     }
                 }
 
@@ -175,7 +178,7 @@ public class PlayerBuildManager : MonoBehaviour
                     deconstructMode = false;
                     selected = lookingAt.GetComponent<BuiltBuildable>().buildable;
                     if (lookingAt != null && oldMaterial != null)
-                        lookingAt.GetComponent<Renderer>().material = oldMaterial;
+                        ChangeAllMaterialsInGO(lookingAt, oldMaterial);
                 }
 
             } else
@@ -201,10 +204,15 @@ public class PlayerBuildManager : MonoBehaviour
         // Build Logic
         if (canPlace)
         {
-            Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity, buildableParentTransform);
+            Vector3Int gridPosition = new Vector3Int(
+                Mathf.RoundToInt(buildPoint.x / gridSize.x + buildablesGridSize.x / 2),
+                Mathf.RoundToInt(buildPoint.y / gridSize.y + buildablesGridSize.y / 2), 
+                Mathf.RoundToInt(buildPoint.z / gridSize.z + buildablesGridSize.z / 2));
+            grid[gridPosition.x, gridPosition.y, gridPosition.z] = Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity, buildableParentTransform);
+            grid[gridPosition.x, gridPosition.y, gridPosition.z].GetComponent<BuiltBuildable>().gridIndicies = gridPosition;
+            if (grid[gridPosition.x, gridPosition.y, gridPosition.z].GetComponent<Belt>() != null)
+                grid[gridPosition.x, gridPosition.y, gridPosition.z].GetComponent<Belt>().grid = grid;
             Destroy(previewGameObject);
-            pathfindGrid.UpdateGrid();
-            Unit.RegeneratePath();
         }
     }
 
@@ -213,8 +221,6 @@ public class PlayerBuildManager : MonoBehaviour
         if (lookingAt != null)
         {
             DestroyImmediate(lookingAt);
-            pathfindGrid.UpdateGrid();
-            Unit.RegeneratePath();
         }
     }
 
@@ -239,4 +245,26 @@ public class PlayerBuildManager : MonoBehaviour
             Debug.LogError("Buildable \"" + name + "\" does not exist.");
         }
     }
+
+    void ChangeAllMaterialsInGO(GameObject go, Material material)
+	{
+        Transform transform = go.transform;
+        Renderer renderer = go.GetComponent<Renderer>();
+
+        if (renderer != null)
+		{
+            renderer.material = material;
+		}
+
+        if (transform.childCount > 0)
+		{
+            foreach (Transform child in transform)
+            {
+                renderer = child.GetComponent<Renderer>();
+
+                if (renderer != null)
+                    renderer.material = material;
+            }
+        }
+	}
 }
