@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+// using UnityEngine.UI;
+using UnityEngine.UIElements;
 using TMPro;
 
 public class BuildMenu : MonoBehaviour
@@ -19,7 +20,7 @@ public class BuildMenu : MonoBehaviour
     void InitializeInstantiated(GameObject instantiated, string name, Sprite icon)
     {
         instantiated.name = name;
-        instantiated.GetComponent<Image>().sprite = icon;
+        instantiated.GetComponent<UnityEngine.UI.Image>().sprite = icon;
         instantiated.GetComponentInChildren<TextMeshProUGUI>().text = name;
     }
 
@@ -29,7 +30,7 @@ public class BuildMenu : MonoBehaviour
         {
             GameObject instantiated = Instantiate(categoryPrefab, categoryContentTransform);
             InitializeInstantiated(instantiated, category.name, category.icon);
-            instantiated.GetComponent<Button>().onClick.AddListener(delegate { OnCategoryButtonClick(instantiated.name); });
+            instantiated.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { OnCategoryButtonClick(instantiated.name); });
         }
 
         // Start by selecting first category
@@ -65,7 +66,7 @@ public class BuildMenu : MonoBehaviour
             {
                 GameObject instantiated = Instantiate(buildablePrefab, buildableContentTransform);
                 InitializeInstantiated(instantiated, buildable.name, buildable.icon);
-                instantiated.GetComponent<Button>().onClick.AddListener(delegate { OnBuildableButtonClick(buildable.name); });
+                instantiated.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { OnBuildableButtonClick(buildable.name); });
             }
         } else
         {

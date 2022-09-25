@@ -16,7 +16,7 @@ public class PlayerHealthManager : MonoBehaviour
     [Range(0, 255)]
     public int tweenToAlpha = 200;
 
-    public int heartAmount = 9;
+    public int heartAmount = 10;
     int currentHeartAmount;
 
     public int healTime = 4;
@@ -127,7 +127,8 @@ public class PlayerHealthManager : MonoBehaviour
         gameOverGameObject.SetActive(false);
         StartCoroutine(nameof(MainLoop));
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        
+        SceneMan.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     void RefillHearts()

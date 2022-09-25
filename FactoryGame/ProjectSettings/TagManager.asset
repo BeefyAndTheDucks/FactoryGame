@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Buildable
+  - SceneManager
   layers:
   - Default
   - TransparentFX

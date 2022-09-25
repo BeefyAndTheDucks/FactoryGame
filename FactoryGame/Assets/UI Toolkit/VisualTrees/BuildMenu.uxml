@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/BuildMenu.uss?fileID=7433441132597879392&amp;guid=57dcf56de2a4e4e46a1e39c9b1503f26&amp;type=3#BuildMenu" />
+    <ui:VisualElement name="screen-filler" style="height: 100%; justify-content: center; background-color: rgba(0, 0, 0, 0); width: 100%; align-items: center;">
+        <ui:VisualElement name="panel" style="width: 75%; height: 70%; background-color: rgba(0, 0, 0, 0.61); left: auto; flex-basis: auto; align-items: center; justify-content: center; border-top-left-radius: 24px; border-bottom-left-radius: 24px; border-top-right-radius: 24px; border-bottom-right-radius: 24px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;">
+            <ui:ScrollView name="categories" style="left: 0; align-items: center; justify-content: center; height: 90%; width: 110px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; position: absolute;">
+                <ui:Button text="Production" display-tooltip-when-elided="true" name="production-category" class="category-button" style="align-items: center;" />
+                <ui:Button text="Logistics" display-tooltip-when-elided="true" name="logistics-category" class="category-button" style="background-image: url(&apos;project://database/Assets/UI/Logistics.png?fileID=2800000&amp;guid=1bbcec2fb87ca2540bc504cd785ff868&amp;type=3#Logistics&apos;);" />
+            </ui:ScrollView>
+            <ui:ScrollView name="buildables" style="left: 110px; align-items: center; justify-content: center; height: 399px; width: 740px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; position: absolute; top: 22px;">
+                <ui:Button text="Belt mk.1" display-tooltip-when-elided="true" name="production-category" class="buildable-button buildables-button" style="background-image: url(&apos;project://database/Assets/UI/Logistics.png?fileID=2800000&amp;guid=1bbcec2fb87ca2540bc504cd785ff868&amp;type=3#Logistics&apos;);" />
+            </ui:ScrollView>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

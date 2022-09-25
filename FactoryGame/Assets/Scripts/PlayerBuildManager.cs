@@ -114,9 +114,9 @@ public class PlayerBuildManager : MonoBehaviour
 
                     deconstructFrame = Mathf.Clamp01(deconstructFrame + Time.deltaTime * deconstructTime);
                     if (deconstructBarReversed)
-                        deconstructTransform.offsetMax = new Vector2(-Mathf.Lerp(220, 0, deconstructFrame), deconstructTransform.offsetMax.y);
+                        deconstructTransform.offsetMax = new Vector2(-Mathf.Lerp(265, 0, deconstructFrame), deconstructTransform.offsetMax.y);
                     else
-                        deconstructTransform.offsetMax = new Vector2(-Mathf.Lerp(0, 220, deconstructFrame), deconstructTransform.offsetMax.y);
+                        deconstructTransform.offsetMax = new Vector2(-Mathf.Lerp(0, 265, deconstructFrame), deconstructTransform.offsetMax.y);
                 }
                 
             }
