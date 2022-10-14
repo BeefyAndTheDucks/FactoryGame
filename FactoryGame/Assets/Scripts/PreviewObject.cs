@@ -7,13 +7,12 @@ public class PreviewObject : MonoBehaviour
     public Material previewMaterial;
     public string ignoreTag;
 
-
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(ignoreTag))
             return;
         PlayerBuildManager.canPlace = false;
-        previewMaterial.color = PlayerBuildManager.red;
+        previewMaterial.color = PlayerBuildManager.instance.red;
     }
 
     private void OnTriggerExit(Collider other)
@@ -21,7 +20,7 @@ public class PreviewObject : MonoBehaviour
         if (other.CompareTag(ignoreTag))
             return;
         PlayerBuildManager.canPlace = true;
-        previewMaterial.color = PlayerBuildManager.green;
+        previewMaterial.color = PlayerBuildManager.instance.green;
     }
 
 }

@@ -18,12 +18,12 @@ public class PlayerBuildManager : MonoBehaviour
     public float reach = 10.0f;
     public bool deconstructBarReversed;
     public Vector3Int buildablesGridSize = Vector3Int.one * 20;
+    public Color red = new Color32(255, 0, 0, 123);
+    public Color green = new Color32(0, 255, 0, 123);
+    public Vector3 rotationIncrement;
 
-    [SerializeField]
-    public static Color red = new Color32(255, 0, 0, 123);
-    [SerializeField]
-    public static Color green = new Color32(0, 255, 0, 123);
     public static bool canPlace = true;
+    public static PlayerBuildManager instance;
 
     [HideInInspector]
     public static bool buildMode;
@@ -31,10 +31,12 @@ public class PlayerBuildManager : MonoBehaviour
     public Buildable selected;
     [HideInInspector]
     public GameObject[,,] grid;
+    [HideInInspector]
+    public Vector3 buildPoint;
 
     bool buildMenuOpen;
     bool deconstructMode;
-    Vector3 buildPoint;
+    Quaternion rotation = Quaternion.identity;
     GameObject lookingAt;
     GameObject previewGameObject;
     FirstPersonController character;
@@ -55,7 +57,18 @@ public class PlayerBuildManager : MonoBehaviour
         return null;
     }
 
-    void Start()
+	void Awake()
+	{
+		if (instance == null)
+		{
+            instance = this;
+		} else
+		{
+            Debug.LogError("More than one \"PlayerBuildManager\" in scene!");
+		}
+	}
+
+	void Start()
     {
         deconstructFrame = 1f;
         previewMaterial.color = green;
@@ -139,6 +152,11 @@ public class PlayerBuildManager : MonoBehaviour
             buildMode = false;
             deconstructMode = true;
         }
+        if (Input.GetButtonDown("rotate"))
+		{
+            Vector3 euler = rotation.eulerAngles + rotationIncrement;
+            rotation = Quaternion.Euler(euler);
+		}
         if (buildMode || deconstructMode)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -208,10 +226,8 @@ public class PlayerBuildManager : MonoBehaviour
                 Mathf.RoundToInt(buildPoint.x / gridSize.x + buildablesGridSize.x / 2),
                 Mathf.RoundToInt(buildPoint.y / gridSize.y + buildablesGridSize.y / 2), 
                 Mathf.RoundToInt(buildPoint.z / gridSize.z + buildablesGridSize.z / 2));
-            grid[gridPosition.x, gridPosition.y, gridPosition.z] = Instantiate(selected.buildPrefab, buildPoint, Quaternion.identity, buildableParentTransform);
+            grid[gridPosition.x, gridPosition.y, gridPosition.z] = Instantiate(selected.buildPrefab, buildPoint, rotation, buildableParentTransform);
             grid[gridPosition.x, gridPosition.y, gridPosition.z].GetComponent<BuiltBuildable>().gridIndicies = gridPosition;
-            if (grid[gridPosition.x, gridPosition.y, gridPosition.z].GetComponent<Belt>() != null)
-                grid[gridPosition.x, gridPosition.y, gridPosition.z].GetComponent<Belt>().grid = grid;
             Destroy(previewGameObject);
         }
     }
@@ -227,9 +243,9 @@ public class PlayerBuildManager : MonoBehaviour
     void Preview()
     {
         if (previewGameObject == null)
-            previewGameObject = Instantiate(selected.previewPrefab, buildPoint, Quaternion.identity);
+            previewGameObject = Instantiate(selected.previewPrefab, buildPoint, rotation);
 
-        previewGameObject.transform.position = buildPoint;
+        previewGameObject.transform.SetPositionAndRotation(buildPoint, rotation);
     }
     
     public void SelectBuildable(string name)
