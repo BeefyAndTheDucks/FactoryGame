@@ -164,7 +164,10 @@ public class PlayerBuildManager : MonoBehaviour
             {
                 buildPoint = new Vector3(Mathf.Round(hit.point.x / gridSize.x) * gridSize.x, Mathf.Round(hit.point.y / gridSize.y) * gridSize.y, Mathf.Round(hit.point.z / gridSize.z) * gridSize.z);
                 if (selected != null)
-                    buildPoint += selected.buildOffset;
+                {
+                    buildPoint += selected.positionOffset;
+                    
+                }
                 if (lookingAt != null)
                     if (lookingAt != hit.transform.gameObject && deconstructMode)
                         ChangeAllMaterialsInGO(lookingAt, oldMaterial);
@@ -245,6 +248,7 @@ public class PlayerBuildManager : MonoBehaviour
         if (previewGameObject == null)
             previewGameObject = Instantiate(selected.previewPrefab, buildPoint, rotation);
 
+        rotation.eulerAngles += selected.rotationOffset;
         previewGameObject.transform.SetPositionAndRotation(buildPoint, rotation);
     }
     

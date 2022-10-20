@@ -5,11 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(BuiltBuildable))]
 public class CornerBelt : Belt
 {
-	BuiltBuildable builtBuildable;
-
-	public new void NextBelt()
+	public override void NextBelt()
 	{
-		if (transform.eulerAngles.y == -90)
+		Debug.Log("Corner Belt Activated");
+		if (transform.eulerAngles.y == 180)
 		{
 			GameObject gridItem = grid[builtBuildable.gridIndicies.x, builtBuildable.gridIndicies.y, builtBuildable.gridIndicies.z + 1];
 
@@ -18,7 +17,7 @@ public class CornerBelt : Belt
 				gridItem.GetComponent<Belt>().AddToBelt(currentItem);
 				currentItem = null;
 			}
-		} else if (transform.eulerAngles.y == 0)
+		} else if (transform.eulerAngles.y == -90)
 		{
 			GameObject gridItem = grid[builtBuildable.gridIndicies.x + 1, builtBuildable.gridIndicies.y, builtBuildable.gridIndicies.z];
 
@@ -27,7 +26,7 @@ public class CornerBelt : Belt
 				gridItem.GetComponent<Belt>().AddToBelt(currentItem);
 				currentItem = null;
 			}
-		} else if (transform.eulerAngles.y == 90)
+		} else if (transform.eulerAngles.y == 0)
 		{
 			GameObject gridItem = grid[builtBuildable.gridIndicies.x, builtBuildable.gridIndicies.y, builtBuildable.gridIndicies.z - 1];
 
@@ -36,7 +35,7 @@ public class CornerBelt : Belt
 				gridItem.GetComponent<Belt>().AddToBelt(currentItem);
 				currentItem = null;
 			}
-		} else if (transform.eulerAngles.y == 180)
+		} else if (transform.eulerAngles.y == 90)
 		{
 			GameObject gridItem = grid[builtBuildable.gridIndicies.x - 1, builtBuildable.gridIndicies.y, builtBuildable.gridIndicies.z];
 

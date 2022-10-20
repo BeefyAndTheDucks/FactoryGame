@@ -15,4 +15,5 @@ MonoBehaviour:
   buildPrefab: {fileID: 6855044328193420215, guid: 73b84d42b5d7dc24abe9f73df680cb17, type: 3}
   previewPrefab: {fileID: 6855044328193420215, guid: b419517166132c24ebb98f43aebbe67e, type: 3}
   icon: {fileID: 21300000, guid: 1bbcec2fb87ca2540bc504cd785ff868, type: 3}
-  buildOffset: {x: 0, y: 0.5, z: 0}
+  positionOffset: {x: 0, y: 0.5, z: 0}
+  rotationOffset: {x: 0, y: 0, z: 0}

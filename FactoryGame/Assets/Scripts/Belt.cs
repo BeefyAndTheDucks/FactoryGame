@@ -12,8 +12,8 @@ public class Belt : MonoBehaviour
 	public GameObject[,,] grid;
 	//[HideInInspector]
 	public Transform currentItem;
-
-	BuiltBuildable builtBuildable;
+	[HideInInspector]
+	public BuiltBuildable builtBuildable;
 
 	void Start()
 	{
@@ -39,7 +39,7 @@ public class Belt : MonoBehaviour
 		}
 	}
 
-	public void NextBelt()
+	public virtual void NextBelt()
 	{
 		if (transform.eulerAngles.y == 0)
 		{
@@ -50,7 +50,8 @@ public class Belt : MonoBehaviour
 				gridItem.GetComponent<Belt>().AddToBelt(currentItem);
 				currentItem = null;
 			}
-		} else if (transform.eulerAngles.y == 90)
+		}
+		else if (transform.eulerAngles.y == 90)
 		{
 			GameObject gridItem = grid[builtBuildable.gridIndicies.x + 1, builtBuildable.gridIndicies.y, builtBuildable.gridIndicies.z];
 
@@ -59,7 +60,8 @@ public class Belt : MonoBehaviour
 				gridItem.GetComponent<Belt>().AddToBelt(currentItem);
 				currentItem = null;
 			}
-		} else if (transform.eulerAngles.y == 180)
+		}
+		else if (transform.eulerAngles.y == 180)
 		{
 			GameObject gridItem = grid[builtBuildable.gridIndicies.x, builtBuildable.gridIndicies.y, builtBuildable.gridIndicies.z - 1];
 
@@ -68,7 +70,8 @@ public class Belt : MonoBehaviour
 				gridItem.GetComponent<Belt>().AddToBelt(currentItem);
 				currentItem = null;
 			}
-		} else if (transform.eulerAngles.y == -90)
+		}
+		else if (transform.eulerAngles.y == -90)
 		{
 			GameObject gridItem = grid[builtBuildable.gridIndicies.x - 1, builtBuildable.gridIndicies.y, builtBuildable.gridIndicies.z];
 
