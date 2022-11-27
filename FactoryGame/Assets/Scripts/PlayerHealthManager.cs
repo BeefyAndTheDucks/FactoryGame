@@ -7,44 +7,45 @@ using Image = UnityEngine.UI.Image;
 
 public class PlayerHealthManager : MonoBehaviour
 {
+    [Header("Health Stuff")]
     public Transform healthTransform;
     public GameObject healthPrefab;
+    public int heartAmount = 9;
+    public int healTime = 4;
+    public Sprite heart;
+    public Sprite heartCracked;
+    public float voidDamageStartY = -60f;
+    public float voidDamageSpeed = 0.25f;
 
+    [Header("Game Over Stuff")]
     public GameObject gameOverGameObject;
-
     public int tweenSpeed = 10;
     [Range(0, 255)]
     public int tweenToAlpha = 200;
 
-    public int heartAmount = 10;
+    [Header("Importants")]
+    public FirstPersonController character;
+
+    #region Private Variables
     int currentHeartAmount;
-
-    public int healTime = 4;
-
-    public Sprite heart;
-    public Sprite heartCracked;
+    int lastHeartAmount;
 
     GameObject[] hearts;
-
-    public FirstPersonController character;
 
     Rigidbody rb;
 
     Vector3 vel;
     float yvel;
     int healthToLoose = 0;
-    int cooldown = 0;
-    static PlayerHealthManager instance;
 
-    [HideInInspector]
-    public bool alive = true;
+    int cooldown = 0;
+
+    [HideInInspector] public bool alive = true;
+
+    #endregion
 
     void Start()
     {
-        instance = this;
-
-        hearts = new GameObject[heartAmount];
-
         rb = character.gameObject.GetComponent<Rigidbody>();
 
         character.landEvent += OnLand;
@@ -53,7 +54,10 @@ public class PlayerHealthManager : MonoBehaviour
         yvel = vel.y;
 
         currentHeartAmount = heartAmount;
-        
+        lastHeartAmount = currentHeartAmount;
+
+        hearts = new GameObject[heartAmount];
+
         for (int i = 0; i < heartAmount; i++)
         {
             hearts[i] = Instantiate(healthPrefab, healthTransform);
@@ -84,9 +88,15 @@ public class PlayerHealthManager : MonoBehaviour
         for (int i = 0; i < healthToLoose; i++)
         {
             currentHeartAmount--;
-            
+
             RefreshHearts();
             healthToLoose--;
+        }
+
+        if (healthToLoose > 1)
+		{
+            PlayDamageSound();
+            print("OnLand");
         }
     }
 
@@ -99,7 +109,7 @@ public class PlayerHealthManager : MonoBehaviour
             character.playerCanMove = false;
             character.cameraCanMove = false;
             character.enableHeadBob = false;
-        
+
             yield return new WaitForSeconds(0.5f);
             Image gameOverImage = gameOverGameObject.GetComponent<Image>();
             gameOverImage.color = new Color32(255, 255, 255, 0);
@@ -119,7 +129,7 @@ public class PlayerHealthManager : MonoBehaviour
         character.playerCanMove = true;
         character.cameraCanMove = true;
         character.enableHeadBob = true;
-        
+
         Debug.Log("Respawn");
         alive = true;
         RefillHearts();
@@ -127,8 +137,7 @@ public class PlayerHealthManager : MonoBehaviour
         gameOverGameObject.SetActive(false);
         StartCoroutine(nameof(MainLoop));
 
-        
-        SceneMan.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     void RefillHearts()
@@ -148,17 +157,25 @@ public class PlayerHealthManager : MonoBehaviour
             hearts[i].GetComponent<Image>().sprite = heartCracked;
         }
 
+        lastHeartAmount = currentHeartAmount;
+
         if (currentHeartAmount <= 0)
         {
             StartCoroutine(nameof(GameOver));
         }
     }
-    
-    IEnumerator MainLoop()
+
+	public void PlayDamageSound()
+	{
+		character.GetComponent<AudioSource>().Play();
+        print("Playing Sound");
+	}
+
+	IEnumerator MainLoop()
     {
         IEnumerator voidDamageCoroutine = VoidDamage();
         StartCoroutine(voidDamageCoroutine);
-        
+
         while (alive)
         {
             if (!(currentHeartAmount >= heartAmount))
@@ -169,7 +186,7 @@ public class PlayerHealthManager : MonoBehaviour
 
             yield return new WaitForSeconds(healTime);
         }
-        
+
         StopCoroutine(voidDamageCoroutine);
     }
 
@@ -177,27 +194,19 @@ public class PlayerHealthManager : MonoBehaviour
     {
         while (alive)
         {
-            if (character.transform.position.y < -60)
+            if (character.transform.position.y <= voidDamageStartY)
             {
                 while (currentHeartAmount > 0)
                 {
                     currentHeartAmount--;
                     RefreshHearts();
-                    
-                    yield return new WaitForSeconds(0.25f);
+                    PlayDamageSound();
+
+                    yield return new WaitForSeconds(voidDamageSpeed);
                 }
             }
 
             yield return new WaitForFixedUpdate();
         }
     }
-
-    public static void TakeDamage(int amount)
-	{
-		for (int i = 0; i < amount; i++)
-		{
-            instance.currentHeartAmount--;
-		}
-        instance.RefreshHearts();
-	}
 }
