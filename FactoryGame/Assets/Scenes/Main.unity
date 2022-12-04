@@ -232,10 +232,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4459864850019384736, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 41f69c62c4c66704096197c2972b3a62, type: 2}
     - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -506,6 +502,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1162994827}
   - component: {fileID: 1162994826}
+  - component: {fileID: 1162994828}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -553,6 +550,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1162994828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162994825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a54d5a3a3fca9344f851f78c538921cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testBuildable: {fileID: 11400000, guid: d22404dce7f4dbc46b0ee52c7de58061, type: 2}
+  testPosition: {x: 0, y: 10, z: 0}
+  testRotation: {x: 0, y: 0, z: 0, w: 0}
+  buildEffectMaterial: {fileID: 2100000, guid: 45f3f7286140eda478708046d15e42ee, type: 2}
+  deconstructEffectMaterial: {fileID: 2100000, guid: 6a2ec8162ad63f9468f0752a34aee1e9, type: 2}
+  buildEffectSpeed: 1
+  deconstructEffectSpeed: 1
+  lastBuilt: {fileID: 0}
 --- !u!1 &1184053530
 GameObject:
   m_ObjectHideFlags: 0

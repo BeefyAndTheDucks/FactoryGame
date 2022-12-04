@@ -7,9 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Test
+  m_Name: DeconstructEffect
   m_Shader: {fileID: -6465566751694194690, guid: e14ab31cfb464724ea1e7609dc71be28, type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _NOISE_MODE_SIMPLE_NOISE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,6 +21,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Ambient_Occlusion:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -41,6 +46,14 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emission_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emmision_Map:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -91,7 +104,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _Dissolve: 0
+    - _Dissolve: 1
     - _DstBlend: 0
     - _Edge_Width: 0.01
     - _EnvironmentReflections: 1
@@ -100,24 +113,28 @@ Material:
     - _GlossyReflections: 1
     - _Glow_Size: 0.01
     - _Metallic: 0
+    - _Metallicness: 1
     - _Mode: 0
+    - _NOISE_MODE: 0
     - _Noise_Scale: 30
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.5
+    - _Smoothness: 0.643
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
     - _UVSec: 0
+    - _Voronoi_Angle_Offset: 2
+    - _Voronoi_Cell_Density: 5
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
+    - _Color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
     - _Edge_Color: {r: 0, g: 0.5647059, b: 11.98431, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Glow_Color: {r: 0, g: 0.5647059, b: 11.98431, a: 0}
