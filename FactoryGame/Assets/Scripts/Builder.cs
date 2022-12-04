@@ -22,23 +22,18 @@ public class Builder : MonoBehaviour
         // Instantiate and get old material
         lastBuilt = Instantiate(properties.buildable.prefab);
         Renderer renderer = lastBuilt.GetComponent<Renderer>();
-        Material oldMaterial = renderer.material;
+        Material oldMaterial = renderer.sharedMaterial;
 
         // Relocate object
         lastBuilt.transform.rotation = properties.rotation;
         lastBuilt.transform.position = properties.position;
 
         // Assign dissolving properties
-        buildEffectMaterial.SetFloat("_Smoothness", oldMaterial.GetFloat("_Smoothness"));
-        buildEffectMaterial.SetFloat("_Metallicness", oldMaterial.GetFloat("_Metallic"));
-        buildEffectMaterial.SetColor("_Color", oldMaterial.GetColor("_Color"));
-        buildEffectMaterial.SetTexture("_Texture", oldMaterial.GetTexture("_MainTex"));
-        buildEffectMaterial.SetTexture("_Ambient_Occlusion", oldMaterial.GetTexture("_OcclusionMap"));
-        buildEffectMaterial.SetTexture("_Emission_Map", oldMaterial.GetTexture("_EmissionMap"));
+        assignProperties(oldMaterial, buildEffectMaterial);
+        buildEffectMaterial.SetFloat("_Dissolve", 1f);
 
         // Start dissolving
         renderer.material = buildEffectMaterial;
-        buildEffectMaterial.SetFloat("_Dissolve", 1f);
         StartCoroutine(buidEffect(oldMaterial, renderer));
 	}
 
@@ -54,7 +49,7 @@ public class Builder : MonoBehaviour
             yield return null;
 		}
 
-        renderer.material = oldMaterial;
+        renderer.sharedMaterial = oldMaterial;
 	}
 
     public void Deconstruct(GameObject obj)
@@ -64,20 +59,26 @@ public class Builder : MonoBehaviour
 
         // Get old material
         Renderer renderer = obj.GetComponent<Renderer>();
-        Material oldMaterial = renderer.material;
+        Material oldMaterial = renderer.sharedMaterial;
 
         // Assign dissolving properties
-        deconstructEffectMaterial.SetFloat("_Smoothness", oldMaterial.GetFloat("_Smoothness"));
-        deconstructEffectMaterial.SetFloat("_Metallicness", oldMaterial.GetFloat("_Metallic"));
-        deconstructEffectMaterial.SetColor("_Color", oldMaterial.GetColor("_Color"));
-        deconstructEffectMaterial.SetTexture("_Texture", oldMaterial.GetTexture("_MainTex"));
-        deconstructEffectMaterial.SetTexture("_Ambient_Occlusion", oldMaterial.GetTexture("_OcclusionMap"));
-        deconstructEffectMaterial.SetTexture("_Emission_Map", oldMaterial.GetTexture("_EmissionMap"));
+        assignProperties(oldMaterial, deconstructEffectMaterial);
         deconstructEffectMaterial.SetFloat("_Dissolve", 0f);
 
         // Start dissolving
         renderer.material = deconstructEffectMaterial;
         StartCoroutine(deconstructEffect(obj));
+    }
+
+    void assignProperties(Material copyFrom, Material copyTo)
+	{
+        copyTo.SetFloat("_Smoothness", copyFrom.GetFloat("_Smoothness"));
+        copyTo.SetFloat("_Metallicness", copyFrom.GetFloat("_Metallic"));
+        copyTo.SetColor("_Color", copyFrom.GetColor("_Color"));
+        copyTo.SetTexture("_Texture", copyFrom.GetTexture("_MainTex"));
+        copyTo.SetTexture("_Ambient_Occlusion", copyFrom.GetTexture("_OcclusionMap"));
+        copyTo.SetTexture("_Emission_Map", copyFrom.GetTexture("_EmissionMap"));
+        copyTo.SetTexture("_Metallic_Map", copyFrom.GetTexture("_MetallicGlossMap"));
     }
 
     IEnumerator deconstructEffect(GameObject obj)
@@ -92,7 +93,10 @@ public class Builder : MonoBehaviour
             yield return null;
         }
 
-        Destroy(obj);
+        if (Application.isEditor)
+            DestroyImmediate(obj);
+        else
+            Destroy(obj);
     }
 
 }
