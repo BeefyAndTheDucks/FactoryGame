@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1814b4156c80464e889d5ca786def55, type: 3}
   m_Name: Test
   m_EditorClassIdentifier: 
+  UUID: a3podsebtlarakme
+  UUIDChars: 0123456789abcdefghijklmnopqrstuvwxyz
+  UUIDLength: 16
   prefab: {fileID: 5003032176560962062, guid: 745f5d069ef4aac478d19eb01eb68e52, type: 3}
