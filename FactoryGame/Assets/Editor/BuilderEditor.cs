@@ -46,5 +46,15 @@ public class BuilderEditor : Editor
 		{
 			builder.ClearLevel();
 		}
+
+		if (GUILayout.Button("Regenerate All UUIDs (May break saves)"))
+		{
+			builder.RegenerateAllUUIDs();
+		}
+
+		if (GUILayout.Button("Generate missing UUIDs"))
+		{
+			builder.GenerateMissingUUIDs();
+		}
 	}
 }

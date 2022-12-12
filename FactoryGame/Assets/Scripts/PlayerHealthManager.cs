@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using Cursor = UnityEngine.Cursor;
 using Image = UnityEngine.UI.Image;
@@ -8,7 +9,6 @@ using Image = UnityEngine.UI.Image;
 public class PlayerHealthManager : MonoBehaviour
 {
     [Header("Health Stuff")]
-    public Transform healthTransform;
     public GameObject healthPrefab;
     public int heartAmount = 9;
     public int healTime = 4;
@@ -18,13 +18,10 @@ public class PlayerHealthManager : MonoBehaviour
     public float voidDamageSpeed = 0.25f;
 
     [Header("Game Over Stuff")]
-    public GameObject gameOverGameObject;
+    
     public int tweenSpeed = 10;
     [Range(0, 255)]
     public int tweenToAlpha = 200;
-
-    [Header("Importants")]
-    public FirstPersonController character;
 
     #region Private Variables
     int currentHeartAmount;
@@ -42,13 +39,21 @@ public class PlayerHealthManager : MonoBehaviour
 
     [HideInInspector] public bool alive = true;
 
+    private FirstPersonController _character;
+    private GameObject _gameOverGameObject;
+    private Transform _healthTransform;
+    
     #endregion
 
     void Start()
     {
-        rb = character.gameObject.GetComponent<Rigidbody>();
+        _character = GetComponent<FirstPersonController>();
+        _gameOverGameObject = GameManager.Instance.GameOverGameObject;
+        _healthTransform = GameManager.Instance.HeartsParent;
 
-        character.landEvent += OnLand;
+        rb = _character.gameObject.GetComponent<Rigidbody>();
+
+        _character.landEvent += OnLand;
 
         vel = rb.velocity;
         yvel = vel.y;
@@ -60,7 +65,7 @@ public class PlayerHealthManager : MonoBehaviour
 
         for (int i = 0; i < heartAmount; i++)
         {
-            hearts[i] = Instantiate(healthPrefab, healthTransform);
+            hearts[i] = Instantiate(healthPrefab, _healthTransform);
         }
 
         StartCoroutine(nameof(MainLoop));
@@ -106,14 +111,14 @@ public class PlayerHealthManager : MonoBehaviour
         {
             alive = false;
             Cursor.lockState = CursorLockMode.None;
-            character.playerCanMove = false;
-            character.cameraCanMove = false;
-            character.enableHeadBob = false;
+            _character.playerCanMove = false;
+            _character.cameraCanMove = false;
+            _character.enableHeadBob = false;
 
             yield return new WaitForSeconds(0.5f);
-            Image gameOverImage = gameOverGameObject.GetComponent<Image>();
+            Image gameOverImage = _gameOverGameObject.GetComponent<Image>();
             gameOverImage.color = new Color32(255, 255, 255, 0);
-            gameOverGameObject.SetActive(true);
+            _gameOverGameObject.SetActive(true);
 
             for (int i = 0; i < tweenToAlpha; i += tweenSpeed)
             {
@@ -126,15 +131,15 @@ public class PlayerHealthManager : MonoBehaviour
     public void Respawn()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        character.playerCanMove = true;
-        character.cameraCanMove = true;
-        character.enableHeadBob = true;
+        _character.playerCanMove = true;
+        _character.cameraCanMove = true;
+        _character.enableHeadBob = true;
 
         Debug.Log("Respawn");
         alive = true;
         RefillHearts();
         currentHeartAmount = heartAmount;
-        gameOverGameObject.SetActive(false);
+        _gameOverGameObject.SetActive(false);
         StartCoroutine(nameof(MainLoop));
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -167,7 +172,7 @@ public class PlayerHealthManager : MonoBehaviour
 
 	public void PlayDamageSound()
 	{
-		character.GetComponent<AudioSource>().Play();
+		_character.GetComponent<AudioSource>().Play();
         print("Playing Sound");
 	}
 
@@ -194,7 +199,7 @@ public class PlayerHealthManager : MonoBehaviour
     {
         while (alive)
         {
-            if (character.transform.position.y <= voidDamageStartY)
+            if (_character.transform.position.y <= voidDamageStartY)
             {
                 while (currentHeartAmount > 0)
                 {

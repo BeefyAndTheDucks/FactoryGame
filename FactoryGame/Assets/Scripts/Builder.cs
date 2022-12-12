@@ -18,9 +18,24 @@ public class Builder : MonoBehaviour
 	public Buildable[] buildables;
 
 	[HideInInspector] public GameObject lastBuilt;
-	public static List<string> usedUUIDs = new List<string>();
+	public static List<string> usedBuildableUUIDs = new();
+	public static List<string> usedItemUUIDs = new();
 
 	public static Builder instance;
+	
+	private static readonly int Smoothness = Shader.PropertyToID("_Smoothness");
+	private static readonly int Metallicness = Shader.PropertyToID("_Metallicness");
+	private static readonly int Color1 = Shader.PropertyToID("_Color");
+	private static readonly int Texture1 = Shader.PropertyToID("_Texture");
+	private static readonly int AmbientOcclusion = Shader.PropertyToID("_Ambient_Occlusion");
+	private static readonly int EmissionMap = Shader.PropertyToID("_Emission_Map");
+	private static readonly int MetallicMap = Shader.PropertyToID("_Metallic_Map");
+	private static readonly int Metallic = Shader.PropertyToID("_Metallic");
+	private static readonly int MainTex = Shader.PropertyToID("_MainTex");
+	private static readonly int OcclusionMap = Shader.PropertyToID("_OcclusionMap");
+	private static readonly int Map = Shader.PropertyToID("_EmissionMap");
+	private static readonly int MetallicGlossMap = Shader.PropertyToID("_MetallicGlossMap");
+	private static readonly int Dissolve = Shader.PropertyToID("_Dissolve");
 
 	void Awake()
 	{
@@ -38,6 +53,23 @@ public class Builder : MonoBehaviour
 		instance = this;
 	}
 
+	public void RegenerateAllUUIDs()
+	{
+		foreach (Buildable buildable in buildables)
+		{
+			buildable.GenerateUUID();
+		}
+	}
+
+	public void GenerateMissingUUIDs()
+	{
+		foreach (Buildable buildable in buildables)
+		{
+			if (buildable.UUID == "")
+				buildable.GenerateUUID();
+		}
+	}
+
 	public void Build(BuildProperties properties, bool isLoading = false)
 	{
 		// Instantiate
@@ -47,6 +79,9 @@ public class Builder : MonoBehaviour
 		lastBuilt.transform.rotation = properties.rotation;
 		lastBuilt.transform.position = properties.position;
 
+		// Add "BuiltBuildable" Component and assign the buildable field
+		lastBuilt.AddComponent<BuiltBuildable>().buildable = properties.buildable;
+
 		if (isLoading)
 			return;
 
@@ -55,11 +90,11 @@ public class Builder : MonoBehaviour
 		Material oldMaterial = renderer.sharedMaterial;
 
 		// Assign dissolving properties
-		assignProperties(oldMaterial, buildEffectMaterial);
-		buildEffectMaterial.SetFloat("_Dissolve", 1f);
+		renderer.material = buildEffectMaterial;
+		AssignProperties(oldMaterial, renderer.material);
+		renderer.material.SetFloat(Dissolve, 1f);
 
 		// Start dissolving
-		renderer.material = buildEffectMaterial;
 		StartCoroutine(buidEffect(oldMaterial, renderer));
 	}
 
@@ -84,25 +119,37 @@ public class Builder : MonoBehaviour
 	{
 		StoredLevel level = SaveManagment.Load("hello");
 
-		if (level == null)
-			return;
-
-		level.ToLevel();
+		level?.ToLevel();
 	}
 
 	IEnumerator buidEffect(Material oldMaterial, Renderer renderer)
 	{
-		float dissolve = 1f;
+		var dissolve = 1f;
 
 		while (dissolve > 0)
 		{
 			dissolve -= Time.deltaTime * buildEffectSpeed;
 			dissolve = Mathf.Clamp01(dissolve);
-			buildEffectMaterial.SetFloat("_Dissolve", dissolve);
+			renderer.material.SetFloat(Dissolve, dissolve);
+			yield return null;
+		}
+		
+		renderer.GetComponent<Renderer>().material = oldMaterial;
+	}
+
+	IEnumerator deconstructEffect(GameObject obj, Renderer renderer)
+	{
+		float dissolve = 0f;
+
+		while (dissolve < 1)
+		{
+			dissolve += Time.deltaTime * deconstructEffectSpeed;
+			dissolve = Mathf.Clamp01(dissolve);
+			renderer.material.SetFloat("_Dissolve", dissolve);
 			yield return null;
 		}
 
-		renderer.sharedMaterial = oldMaterial;
+		Destroy(obj);
 	}
 
 	public void Deconstruct(GameObject obj)
@@ -112,26 +159,26 @@ public class Builder : MonoBehaviour
 
 		// Get old material
 		Renderer renderer = obj.GetComponent<Renderer>();
-		Material oldMaterial = renderer.sharedMaterial;
+		Material oldMaterial = renderer.material;
 
 		// Assign dissolving properties
-		assignProperties(oldMaterial, deconstructEffectMaterial);
-		deconstructEffectMaterial.SetFloat("_Dissolve", 0f);
+		renderer.material = deconstructEffectMaterial;
+		AssignProperties(oldMaterial, renderer.material);
+		renderer.material.SetFloat(Dissolve, 0f);
 
 		// Start dissolving
-		renderer.material = deconstructEffectMaterial;
-		StartCoroutine(deconstructEffect(obj));
+		StartCoroutine(deconstructEffect(obj, renderer));
 	}
 
-	void assignProperties(Material copyFrom, Material copyTo)
+	private static void AssignProperties(Material copyFrom, Material copyTo)
 	{
-		copyTo.SetFloat("_Smoothness", copyFrom.GetFloat("_Smoothness"));
-		copyTo.SetFloat("_Metallicness", copyFrom.GetFloat("_Metallic"));
-		copyTo.SetColor("_Color", copyFrom.GetColor("_Color"));
-		copyTo.SetTexture("_Texture", copyFrom.GetTexture("_MainTex"));
-		copyTo.SetTexture("_Ambient_Occlusion", copyFrom.GetTexture("_OcclusionMap"));
-		copyTo.SetTexture("_Emission_Map", copyFrom.GetTexture("_EmissionMap"));
-		copyTo.SetTexture("_Metallic_Map", copyFrom.GetTexture("_MetallicGlossMap"));
+		copyTo.SetFloat(Smoothness, copyFrom.GetFloat(Smoothness));
+		copyTo.SetFloat(Metallicness, copyFrom.GetFloat(Metallic));
+		copyTo.SetColor(Color1, copyFrom.GetColor(Color1));
+		copyTo.SetTexture(Texture1, copyFrom.GetTexture(MainTex));
+		copyTo.SetTexture(AmbientOcclusion, copyFrom.GetTexture(OcclusionMap));
+		copyTo.SetTexture(EmissionMap, copyFrom.GetTexture(Map));
+		copyTo.SetTexture(MetallicMap, copyFrom.GetTexture(MetallicGlossMap));
 	}
 
 	public void ClearLevel()
@@ -141,22 +188,6 @@ public class Builder : MonoBehaviour
 			Destroy(child.gameObject);
 		}
 	}
-
-	IEnumerator deconstructEffect(GameObject obj)
-	{
-		float dissolve = 0f;
-
-		while (dissolve < 1)
-		{
-			dissolve += Time.deltaTime * buildEffectSpeed;
-			dissolve = Mathf.Clamp01(dissolve);
-			deconstructEffectMaterial.SetFloat("_Dissolve", dissolve);
-			yield return null;
-		}
-
-		Destroy(obj);
-	}
-
 }
 
 public struct BuildProperties

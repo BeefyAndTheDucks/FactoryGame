@@ -2,22 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class Buildable : ScriptableObject
+/// <summary>
+/// You cannot store this with a binary formatter!
+/// </summary>
+[System.Serializable]
+public class Buildable
 {
-    [Header("UUID Stuff")]
-    public string UUID = "0000000000000000";
-    public string UUIDChars = "1234567890abcdefghijklmnopqrstuvwxyz";
-
-    public int UUIDLength = 32;
-
-    [Header("Others")]
+    [Header("Info")]
+    public string name = "New Buildable";
+    public Category Category;
     public GameObject prefab;
+    public GameObject previewPrefab;
+    public Vector3 BuildOffset;
+    public Quaternion BaseRotation;
+    public Sprite Icon;
+
+    [Header("UUID Stuff")]
+    public string UUID = "";
+
     // Other properties
 
-	public void GenerateUUID()
+    static string UUIDChars = "1234567890abcdefghijklmnopqrstuvwxyz";
+    static int UUIDLength = 16;
+
+    public void GenerateUUID()
 	{
-        Builder.usedUUIDs.Remove(UUID);
+        Builder.usedBuildableUUIDs.Remove(UUID);
 
         char[] UUIDCharArray = new char[UUIDLength];
 
@@ -30,12 +40,20 @@ public class Buildable : ScriptableObject
 
             UUID = new string(UUIDCharArray);
 
-            if (!Builder.usedUUIDs.Contains(UUIDCharArray.ToString()))
+            if (!Builder.usedBuildableUUIDs.Contains(UUIDCharArray.ToString()))
 			{
-                Builder.usedUUIDs.Add(UUID);
+                Builder.usedBuildableUUIDs.Add(UUID);
                 break;
 			}
 		}
 	}
+
+    public Buildable()
+	{
+        UUIDChars = "1234567890abcdefghijklmnopqrstuvwxyz";
+        UUID = "";
+
+        UUIDLength = 32;
+    }
 }
 
