@@ -11,10 +11,28 @@ public class BuildMenu : MonoBehaviour
     [SerializeField] private Transform CategoryParent;
     [SerializeField] private Transform BuildableParent;
     [SerializeField] private PlayerBuilder PlayerBuilder;
-    [SerializeField] private FirstPersonController Controller;
+    [HideInInspector] public FirstPersonController Controller;
     [SerializeField] private GameObject Menu;
 
-    private void Start()
+    [HideInInspector] public static BuildMenu instance;
+
+    private void AssignSingleton()
+    {
+        if (instance != null)
+        {
+            Debug.LogError("More than one BuildMenu script in scene.");
+            return;
+        }
+
+        instance = this;
+    }
+
+	void Awake()
+	{
+        AssignSingleton();
+    }
+
+	private void Start()
     {
         _builder = Builder.instance;
         _buildables = _builder.buildables;

@@ -55,6 +55,12 @@ public class PlayerBuilder : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_camera == null)
+		{
+            _camera = Camera.main;
+            return;
+		}
+
         if (building != _last)
             _isNew = true;
         var ray = _camera.ScreenPointToRay(Input.mousePosition);

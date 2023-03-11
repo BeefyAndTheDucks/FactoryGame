@@ -133,10 +133,6 @@ public class FirstPersonController : MonoBehaviour
 
     #endregion
 
-    public delegate void LandDelegate();
-
-    public event LandDelegate landEvent;
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -459,7 +455,6 @@ public class FirstPersonController : MonoBehaviour
             Debug.DrawRay(origin, direction * distance, Color.red);
             isGrounded = true;
             jumping = false;
-            landEvent();
         }
         else
         {
