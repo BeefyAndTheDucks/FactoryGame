@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Mac" BasePlatform="Mac" SchemaVersion="16" SoundBankVersion="145">
+	<RootPaths>
+		<ProjectRoot>../..</ProjectRoot>
+		<SourceFilesRoot>../../.cache/Mac</SourceFilesRoot>
+		<SoundBanksRoot>.</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>.</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<SoundBanks>
+		<SoundBank Id="1355168291" Type="User" Language="SFX" Hash="{F56A610C-C7C4-F874-B68B-7ADDF94EBB7A}">
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+			<Plugins>
+				<AudioDevices>
+					<Plugin Id="2317455096" Name="No_Output" LibName="No Output" LibId="11862023"/>
+					<Plugin Id="3859886410" Name="System" LibName="System" LibId="11403271"/>
+				</AudioDevices>
+			</Plugins>
+			<Busses>
+				<Bus Id="3803692087" Name="Master Audio Bus"/>
+			</Busses>
+		</SoundBank>
+		<SoundBank Id="3991942870" Type="User" Language="SFX" Hash="{2EC3C721-945A-C3F2-9C38-88DAE3B9E900}">
+			<ShortName>Music</ShortName>
+			<Path>Music.bnk</Path>
+			<Media>
+				<File Id="549097560" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Factorissimo Main Menu START.wav</ShortName>
+					<CachePath>SFX/Factorissimo Main Menu START_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="596326527" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Factorissimo Main Menu LOOP.wav</ShortName>
+					<CachePath>SFX/Factorissimo Main Menu LOOP_D79FB2B7.wem</CachePath>
+				</File>
+			</Media>
+			<Events>
+				<Event Id="2005704188" Name="Main_Menu" DurationType="Infinite">
+					<MediaRefs>
+						<MediaRef Id="549097560"/>
+						<MediaRef Id="596326527"/>
+					</MediaRefs>
+				</Event>
+			</Events>
+		</SoundBank>
+	</SoundBanks>
+	<FileHash>{4C50B004-FBAF-C0E5-A0D5-B78DA9B13D81}</FileHash>
+</SoundBanksInfo>

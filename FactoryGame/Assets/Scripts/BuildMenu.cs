@@ -62,20 +62,34 @@ public class BuildMenu : MonoBehaviour
     private void Update()
     {
         if (Input.GetButtonDown("Build"))
-            if (PlayerBuilder.building == null || PlayerBuilder.building.prefab == null)
+            if ((PlayerBuilder.building == null || PlayerBuilder.building.prefab == null))
                 _toggleBuildMenu();
+            else if (PlayerBuilder.deconstructMode)
+            {
+                PlayerBuilder.ExitBuildMode();
+                _toggleBuildMenu();
+            }
             else
-                PlayerBuilder.RemovePreview();
+                PlayerBuilder.ExitBuildMode();
+
+        if (Input.GetButtonDown("Exit Build Mode"))
+        {
+            _switchBuildMenuTo(false);
+        }
     }
 
     private void _toggleBuildMenu()
     {
-        GameObject o;
-        (o = Menu).SetActive(!o.activeSelf);
+        _switchBuildMenuTo(!Menu.activeSelf);
+    }
 
-        Cursor.lockState = (o.activeSelf) ? CursorLockMode.None : CursorLockMode.Locked;
-        Controller.playerCanMove = !o.activeSelf;
-        Controller.enableHeadBob = !o.activeSelf;
-        Controller.cameraCanMove = !o.activeSelf;
+    private void _switchBuildMenuTo(bool to)
+    {
+        Menu.SetActive(to);
+
+        Cursor.lockState = (to) ? CursorLockMode.None : CursorLockMode.Locked;
+        Controller.playerCanMove = !to;
+        Controller.enableHeadBob = !to;
+        Controller.cameraCanMove = !to;
     }
 }

@@ -18,7 +18,7 @@ public class BuiltBuildable : MonoBehaviour
     {
         if (_renderer.sharedMaterial != _originalMaterial && _renderer.sharedMaterial != _plBuilder.deconstructMaterial)
             _originalMaterial = _renderer.sharedMaterial;
-        _renderer.sharedMaterial = (_plBuilder.lookingAtDeconstruct == gameObject && showMaterial) ? _plBuilder.deconstructMaterial : _originalMaterial;
+        _renderer.sharedMaterial = (_plBuilder.lookingAtDeconstruct == gameObject && showMaterial && !isDeconstructing) ? _plBuilder.deconstructMaterial : _originalMaterial;
     }
 
     private void Start()

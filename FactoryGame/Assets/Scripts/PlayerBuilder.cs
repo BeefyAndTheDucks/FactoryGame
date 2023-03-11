@@ -122,8 +122,7 @@ public class PlayerBuilder : MonoBehaviour
 				{
 					_deconstructDeltaLeft -= Time.deltaTime;
 					_deconstructDeltaLeft = Mathf.Clamp(_deconstructDeltaLeft, 0, deconstructTime);
-					_deconstructPercentage = Map(_deconstructDeltaLeft, 0, deconstructTime, deconstructBarEmpty,
-						deconstructBarFull);
+					_deconstructPercentage = Map(_deconstructDeltaLeft, 0, deconstructTime, deconstructBarEmpty,deconstructBarFull);
 
 					deconstructBarProgress.offsetMax =
 						new Vector2(-_deconstructPercentage, deconstructBarProgress.offsetMax.y);
@@ -140,15 +139,14 @@ public class PlayerBuilder : MonoBehaviour
 
 		if (Input.GetButtonDown("Exit Build Mode"))
 		{
-            RemovePreview();
-            deconstructMode = false;
+            ExitBuildMode();
 		}
 
         if (Input.GetButtonDown("Deconstruct"))
 		{
-            deconstructMode = !deconstructMode;
-            RemovePreview();
-        }
+			deconstructMode = !deconstructMode;
+			ExitBuildMode(false);
+		}
 
         if (Input.GetButtonDown("Pick"))
         {
@@ -157,11 +155,10 @@ public class PlayerBuilder : MonoBehaviour
 		        var buildable = _lookingAt.GetComponent<BuiltBuildable>();
 		        if (buildable != null)
 		        {
+                    deconstructMode = false;
 			        building = buildable.buildable;
 		        }
 	        }
-
-	        deconstructMode = false;
         }
         
         deconstructBar.SetActive(deconstructMode && Input.GetButton("Place") && !LookingAtIsNull && builtBuildable != null && !builtBuildable.isDeconstructing);
@@ -169,9 +166,11 @@ public class PlayerBuilder : MonoBehaviour
         _rotation.eulerAngles += (rotationStep.eulerAngles * Input.GetAxis("Rotate"));
 	}
 
-    public void RemovePreview()
+    public void ExitBuildMode(bool exitDeconstructMode = true)
 	{
         building = null;
+        if (exitDeconstructMode)
+			deconstructMode = false;
 
         if (_current != null)
             Destroy(_current);
@@ -179,9 +178,6 @@ public class PlayerBuilder : MonoBehaviour
     
     private static float Map(float x, float x1, float x2, float y1,  float y2)
     {
-	    var m = (y2 - y1) / (x2 - x1);
-	    var c = y1 - m * x1; // point of interest: c is also equal to y2 - m * x2, though float math might lead to slightly different results.
- 
-	    return m * x + c;
+        return Mathf.Lerp(y1, y2, Mathf.InverseLerp(x1, x2, x));
     }
 }

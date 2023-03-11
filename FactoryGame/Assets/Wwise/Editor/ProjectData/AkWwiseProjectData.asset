@@ -1,0 +1,190 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8f11214504add542ad4ed973ed421b5, type: 3}
+  m_Name: AkWwiseProjectData
+  m_EditorClassIdentifier: 
+  AcousticTextureWwu:
+  - PhysicalPath: Virtual Acoustics\Default Work Unit.wwu
+    PathAndIcons:
+    - ElementName: Virtual Acoustics
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: 9cff2966598b8b48a22e002b60cbf325
+    ParentPath: Virtual Acoustics\Default Work Unit
+    guid: 9cff2966598b8b48a22e002b60cbf325
+    GuidInternal: 
+    m_lastTime: -8585272318668445202
+    List: []
+  AuxBusWwu:
+  - PhysicalPath: Master-Mixer Hierarchy\Default Work Unit.wwu
+    PathAndIcons:
+    - ElementName: Master-Mixer Hierarchy
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: ef33d9b80ec3fc48a482135d1f0693cb
+    ParentPath: Master-Mixer Hierarchy\Default Work Unit
+    guid: ef33d9b80ec3fc48a482135d1f0693cb
+    GuidInternal: 
+    m_lastTime: -8585272318668939995
+    List:
+    - name: Master Audio Bus
+      guid: d8a41415a61d2a41a17e75ca0c2149f3
+      id: 3803692087
+      PathAndIcons:
+      - ElementName: Master-Mixer Hierarchy
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: ef33d9b80ec3fc48a482135d1f0693cb
+      - ElementName: Master Audio Bus
+        ObjectType: 2
+        guid: d8a41415a61d2a41a17e75ca0c2149f3
+      Path: Master-Mixer Hierarchy\Default Work Unit\Master Audio Bus
+  BankWwu:
+  - PhysicalPath: SoundBanks\Default Work Unit.wwu
+    PathAndIcons:
+    - ElementName: SoundBanks
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: 9ee2ab90d892994e8ed28233ad530261
+    ParentPath: SoundBanks\Default Work Unit
+    guid: 9ee2ab90d892994e8ed28233ad530261
+    GuidInternal: 
+    m_lastTime: -8585270321249941534
+    List:
+    - name: Music
+      guid: 8403902f752a90418c9952d50b6d19b1
+      id: 3991942870
+      PathAndIcons:
+      - ElementName: SoundBanks
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 9ee2ab90d892994e8ed28233ad530261
+      - ElementName: Music
+        ObjectType: 7
+        guid: 8403902f752a90418c9952d50b6d19b1
+      Path: SoundBanks\Default Work Unit\Music
+  EventWwu:
+  - PhysicalPath: Events\Default Work Unit.wwu
+    PathAndIcons:
+    - ElementName: Events
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: 41b77f264bfb9d4f9954193b94c7d02f
+    ParentPath: Events\Default Work Unit
+    guid: 41b77f264bfb9d4f9954193b94c7d02f
+    GuidInternal: 
+    m_lastTime: -8585272295554852138
+    List: []
+  - PhysicalPath: Events\Music.wwu
+    PathAndIcons:
+    - ElementName: Events
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Music
+      ObjectType: 12
+      guid: 9e86f9949e8ada43af7ca6d230bc2aea
+    ParentPath: Events\Music
+    guid: 9e86f9949e8ada43af7ca6d230bc2aea
+    GuidInternal: 
+    m_lastTime: -8585272294555955484
+    List:
+    - name: Main_Menu
+      guid: e298a496c7cf45428d51f2b3a57f70aa
+      id: 2005704188
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Music
+        ObjectType: 12
+        guid: 9e86f9949e8ada43af7ca6d230bc2aea
+      - ElementName: Main_Menu
+        ObjectType: 3
+        guid: e298a496c7cf45428d51f2b3a57f70aa
+      Path: Events\Music\Main_Menu
+      maxAttenuation: 0
+      maxDuration: -1
+      minDuration: -1
+  RtpcWwu:
+  - PhysicalPath: Game Parameters\Default Work Unit.wwu
+    PathAndIcons:
+    - ElementName: Game Parameters
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: 7dec84f6d8473547a1f6c44ff339a969
+    ParentPath: Game Parameters\Default Work Unit
+    guid: 7dec84f6d8473547a1f6c44ff339a969
+    GuidInternal: 
+    m_lastTime: -8585272299136520194
+    List: []
+  StateWwu:
+  - PhysicalPath: States\Default Work Unit.wwu
+    PathAndIcons:
+    - ElementName: States
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: 81b818f21c53b0428f7393eb93c2451b
+    ParentPath: States\Default Work Unit
+    guid: 81b818f21c53b0428f7393eb93c2451b
+    GuidInternal: 
+    m_lastTime: -8585272299136553769
+    List: []
+  SwitchWwu:
+  - PhysicalPath: Switches\Default Work Unit.wwu
+    PathAndIcons:
+    - ElementName: Switches
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: c1e85c4254fce841873104103596342e
+    ParentPath: Switches\Default Work Unit
+    guid: c1e85c4254fce841873104103596342e
+    GuidInternal: 
+    m_lastTime: -8585272318668719095
+    List: []
+  TriggerWwu:
+  - PhysicalPath: Triggers\Default Work Unit.wwu
+    PathAndIcons:
+    - ElementName: Triggers
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: 1d6dde7839da1a479742a98206c26828
+    ParentPath: Triggers\Default Work Unit
+    guid: 1d6dde7839da1a479742a98206c26828
+    GuidInternal: 
+    m_lastTime: -8585272318668857113
+    List: []
+  ExpandedFileSystemItemIds: 
+  ExpandedWaapiItemIds: 01000000050000000600000007000000080000000b0000000c0000000d00000032000000330000009100000092000000e6000000
+  AutoSyncSelection: 0
+  autoPopulateEnabled: 1
+  currentDataSource: 0
+  CurrentPluginConfig: 

@@ -289,7 +289,7 @@ MonoBehaviour:
   maxDistance: Infinity
   previewParent: {fileID: 0}
   rotationStep: {x: 0, y: 0.70710677, z: 0, w: 0.70710677}
-  deconstructTime: 2
+  deconstructTime: 1
   deconstructBar: {fileID: 0}
   deconstructBarProgress: {fileID: 0}
   deconstructBarEmpty: 975
@@ -540,8 +540,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4459864851310106429}
   - component: {fileID: 4459864851310106426}
-  - component: {fileID: 4459864851310106427}
   - component: {fileID: 1883340138}
+  - component: {fileID: 717756546}
+  - component: {fileID: 717756547}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: MainCamera
@@ -608,14 +609,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &4459864851310106427
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4459864851310106424}
-  m_Enabled: 1
 --- !u!114 &1883340138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,6 +642,42 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &717756546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4459864851310106424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cd00083e5a3e654ba6502d7ff584f01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDefaultListener: 1
+  listenerId: 0
+--- !u!114 &717756547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4459864851310106424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e571d350e2e2ee64ea40b32bd810745a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_listeners:
+    initialListenerList: []
+    useDefaultListeners: 1
+  isEnvironmentAware: 0
+  isStaticObject: 0
+  m_positionOffsetData:
+    KeepMe: 0
+    positionOffset: {x: 0, y: 0, z: 0}
+  m_posOffsetData: {fileID: 0}
+  listenerMask: 1
 --- !u!1 &4459864851397454630
 GameObject:
   m_ObjectHideFlags: 0

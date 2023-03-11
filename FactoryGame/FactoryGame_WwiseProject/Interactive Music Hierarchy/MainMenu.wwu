@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{029A6ECC-A11A-41C7-B314-2E0D394D9E33}" SchemaVersion="110">
+	<InteractiveMusic>
+		<WorkUnit Name="MainMenu" ID="{029A6ECC-A11A-41C7-B314-2E0D394D9E33}" PersistMode="Standalone">
+			<ChildrenList>
+				<MusicPlaylistContainer Name="Main Menu" ID="{ED4BB40A-6C33-4200-A472-5DE3AD2AEC97}" ShortID="1067302668">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{17395665-E011-4131-A9E2-E8F010DB2445}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{B8D933EF-C30E-48FC-A482-135D1F0693CB}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicSegment Name="Factorissimo Main Menu LOOP" ID="{F55B04A1-8EDC-49CA-9F30-B369A19FA1A0}" ShortID="823748960">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="16125"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{17395665-E011-4131-A9E2-E8F010DB2445}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{B8D933EF-C30E-48FC-A482-135D1F0693CB}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="Factorissimo Main Menu LOOP" ID="{C77116D8-BA84-4392-9DAB-B91FC4DE8A49}" ShortID="312889429">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{B8D933EF-C30E-48FC-A482-135D1F0693CB}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Factorissimo Main Menu LOOP" ID="{4BDCEE36-5DE0-475E-BF56-80559382F496}">
+											<Language>SFX</Language>
+											<AudioFile>Factorissimo Main Menu LOOP.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="596326527"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<TransitionList>
+										<MusicTransition Name="Root" ID="{961604BD-854E-44C2-AB45-9B0D63546F0A}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</TransitionList>
+									<ObjectLists>
+										<ObjectList Name="Sequences">
+											<Reference>
+												<Local>
+													<MusicTrackSequence Name="" ID="{6D55B3D6-DA29-4354-AFA1-43602751C6D8}">
+														<ObjectLists>
+															<ObjectList Name="Clips">
+																<Reference>
+																	<Local>
+																		<MusicClip Name="Factorissimo Main Menu LOOP" ID="{903E9D5F-8279-41EC-B98E-8F8F87546D40}">
+																			<PropertyList>
+																				<Property Name="EndTrimOffset" Type="Real64" Value="16000"/>
+																				<Property Name="FadeInMode" Type="int16" Value="0"/>
+																				<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																			</PropertyList>
+																			<AudioSourceRef Name="Factorissimo Main Menu LOOP" ID="{4BDCEE36-5DE0-475E-BF56-80559382F496}"/>
+																		</MusicClip>
+																	</Local>
+																</Reference>
+															</ObjectList>
+														</ObjectLists>
+													</MusicTrackSequence>
+												</Local>
+											</Reference>
+										</ObjectList>
+									</ObjectLists>
+								</MusicTrack>
+							</ChildrenList>
+							<ObjectLists>
+								<ObjectList Name="Cues">
+									<Reference>
+										<Local>
+											<MusicCue Name="Entry Cue" ID="{99170BFE-62FA-4DFE-9F34-103D70725028}"/>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<MusicCue Name="Exit Cue" ID="{6121CF09-1ED0-4F56-9FEE-D6CAB7F769C0}">
+												<PropertyList>
+													<Property Name="CueType" Type="int16" Value="1"/>
+													<Property Name="TimeMs" Type="Real64" Value="16000"/>
+												</PropertyList>
+											</MusicCue>
+										</Local>
+									</Reference>
+								</ObjectList>
+							</ObjectLists>
+						</MusicSegment>
+						<MusicSegment Name="Factorissimo Main Menu START" ID="{90446493-2A4B-44EC-8897-0CF576AE0546}" ShortID="990642974">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="12000"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{17395665-E011-4131-A9E2-E8F010DB2445}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{B8D933EF-C30E-48FC-A482-135D1F0693CB}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="Factorissimo Main Menu START" ID="{F87C86AE-4929-4ABB-86C2-6C7F97489EFA}" ShortID="133542489">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{B8D933EF-C30E-48FC-A482-135D1F0693CB}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Factorissimo Main Menu START" ID="{158F26B1-9B75-4A9A-B678-779A1B5EA877}">
+											<Language>SFX</Language>
+											<AudioFile>Factorissimo Main Menu START.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="549097560"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<TransitionList>
+										<MusicTransition Name="Root" ID="{14B27C1F-5EE2-4E27-A018-06CBD763879E}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</TransitionList>
+									<ObjectLists>
+										<ObjectList Name="Sequences">
+											<Reference>
+												<Local>
+													<MusicTrackSequence Name="" ID="{1CAE9EC3-36A4-4D28-9C1B-32B0F6ED420F}">
+														<ObjectLists>
+															<ObjectList Name="Clips">
+																<Reference>
+																	<Local>
+																		<MusicClip Name="Factorissimo Main Menu START" ID="{F6B06D4D-16B7-4E9E-A029-842A50196A5D}">
+																			<PropertyList>
+																				<Property Name="EndTrimOffset" Type="Real64" Value="12000"/>
+																				<Property Name="FadeInMode" Type="int16" Value="0"/>
+																				<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																			</PropertyList>
+																			<AudioSourceRef Name="Factorissimo Main Menu START" ID="{158F26B1-9B75-4A9A-B678-779A1B5EA877}"/>
+																		</MusicClip>
+																	</Local>
+																</Reference>
+															</ObjectList>
+														</ObjectLists>
+													</MusicTrackSequence>
+												</Local>
+											</Reference>
+										</ObjectList>
+									</ObjectLists>
+								</MusicTrack>
+							</ChildrenList>
+							<ObjectLists>
+								<ObjectList Name="Cues">
+									<Reference>
+										<Local>
+											<MusicCue Name="Entry Cue" ID="{C173CA47-1F97-464D-BC5F-4591BD412F5A}"/>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<MusicCue Name="Exit Cue" ID="{62A84237-6F50-4EE2-856F-9F8E52EBDF69}">
+												<PropertyList>
+													<Property Name="CueType" Type="int16" Value="1"/>
+													<Property Name="TimeMs" Type="Real64" Value="12000"/>
+												</PropertyList>
+											</MusicCue>
+										</Local>
+									</Reference>
+								</ObjectList>
+							</ObjectLists>
+						</MusicSegment>
+					</ChildrenList>
+					<TransitionList>
+						<MusicTransition Name="Root" ID="{F966BD50-F848-492C-9517-855AF63C5939}">
+							<PropertyList>
+								<Property Name="IsFolder" Type="bool" Value="True"/>
+							</PropertyList>
+							<ChildrenList>
+								<MusicTransition Name="Transition" ID="{50A24335-273A-4870-82A8-FD8EC9300CC3}">
+									<TransitionInfo/>
+								</MusicTransition>
+							</ChildrenList>
+							<TransitionInfo/>
+						</MusicTransition>
+					</TransitionList>
+					<Playlist>
+						<MusicPlaylistItem Name="" ID="{BCC2BD81-688E-4892-8DC6-996880BE1B73}" ShortID="527186791">
+							<ChildrenList>
+								<MusicPlaylistItem Name="" ID="{67445AA5-3DFC-4686-AD0A-1672AA54E959}" ShortID="326660606">
+									<PropertyList>
+										<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+									</PropertyList>
+									<SegmentRef Name="Factorissimo Main Menu START" ID="{90446493-2A4B-44EC-8897-0CF576AE0546}"/>
+								</MusicPlaylistItem>
+								<MusicPlaylistItem Name="" ID="{A8237701-1259-4C36-B9D2-EC69C297DA1C}" ShortID="731281100">
+									<PropertyList>
+										<Property Name="LoopCount" Type="int16" Value="0"/>
+										<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+									</PropertyList>
+									<SegmentRef Name="Factorissimo Main Menu LOOP" ID="{F55B04A1-8EDC-49CA-9F30-B369A19FA1A0}"/>
+								</MusicPlaylistItem>
+							</ChildrenList>
+						</MusicPlaylistItem>
+					</Playlist>
+				</MusicPlaylistContainer>
+			</ChildrenList>
+		</WorkUnit>
+	</InteractiveMusic>
+</WwiseDocument>

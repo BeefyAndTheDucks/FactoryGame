@@ -1,14 +1,32 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
-[System.Serializable]
+[Serializable]
 public class StoredLevel
 {
     List<StoredBuildable> buildables;
 
-    public StoredLevel()
+	public string fileName;
+	public SavePlaytime playtime;
+	public SaveLastplayed lastplayed;
+    public StoredLevel(string fileName, bool shouldBeEmpty = false)
 	{
 		buildables = new List<StoredBuildable>();
+
+		playtime = new(0, 0, 0);
+		var oldLastPlayed = lastplayed;
+		lastplayed = new(DateTime.Today, true);
+
+		if (oldLastPlayed.valid)
+		{
+			var diff = lastplayed.GetDateTime() - oldLastPlayed.GetDateTime();
+			playtime = new(diff.Hours, diff.Minutes, diff.Seconds);
+		}
+		this.fileName = fileName;
+
+		if (shouldBeEmpty)
+			return;
 
 		foreach (Transform child in Builder.instance.buildableParent)
 		{
@@ -41,4 +59,41 @@ public class StoredLevel
 			Debug.Log("Added new object.");
 		}
 	}
+}
+
+[Serializable]
+public struct SavePlaytime
+{
+	public int hours;
+	public int minutes;
+	public int seconds;
+
+	public SavePlaytime(int hours, int minutes, int seconds)
+	{
+		this.hours = hours;
+		this.minutes = minutes;
+		this.seconds = seconds;
+	}
+}
+
+[Serializable]
+public struct SaveLastplayed
+{
+	public int year;
+	public int month;
+	public int day;
+	public bool valid;
+
+	private DateTime time;
+
+	public SaveLastplayed(DateTime now, bool valid = false)
+	{
+		this.valid = valid;
+		year = now.Year;
+		month = now.Month;
+		day = now.Day;
+		time = now;
+	}
+
+	public DateTime GetDateTime() => time;
 }

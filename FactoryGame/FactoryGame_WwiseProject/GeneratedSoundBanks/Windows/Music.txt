@@ -1,0 +1,7 @@
+Event	ID	Name			Wwise Object Path	Notes
+	2005704188	Main_Menu			\Music\Main_Menu	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	549097560	Factorissimo Main Menu START	C:\Users\Simon\Desktop\Projects\FactoryGame\FactoryGame\FactoryGame_WwiseProject\.cache\Windows\SFX\Factorissimo Main Menu START_D79FB2B7.wem		\Interactive Music Hierarchy\MainMenu\Main Menu\Factorissimo Main Menu START\Factorissimo Main Menu START		2116896
+	596326527	Factorissimo Main Menu LOOP	C:\Users\Simon\Desktop\Projects\FactoryGame\FactoryGame\FactoryGame_WwiseProject\.cache\Windows\SFX\Factorissimo Main Menu LOOP_D79FB2B7.wem		\Interactive Music Hierarchy\MainMenu\Main Menu\Factorissimo Main Menu LOOP\Factorissimo Main Menu LOOP		2822496
+

@@ -11,28 +11,8 @@ public class BuilderEditor : Editor
 		Builder builder = (Builder)target;
 
 		base.OnInspectorGUI();
-
-		if (GUILayout.Button("Test Building"))
-		{
-			Vector3 position = builder.testPosition;
-
-			if (builder.lastBuilt != null)
-				position.y = (builder.lastBuilt.transform.position.y + 10);
-
-			float testMultiplier = 10;
-
-			position += new Vector3(Random.Range(-10, 10) / 10f * testMultiplier, 0, Random.Range(-10, 10) / 10f * testMultiplier);
-
-			BuildProperties testBuildProperties = new BuildProperties(builder.testRotation, position, builder.testBuildable);
-			builder.Build(testBuildProperties);
-		}
-
-		if (GUILayout.Button("Test Deconstruct"))
-		{
-			builder.Deconstruct(builder.lastBuilt);
-		}
-
-		if (GUILayout.Button("Test Save"))
+		
+		if (GUILayout.Button("Save"))
 		{
 			builder.TestSaving();
 		}

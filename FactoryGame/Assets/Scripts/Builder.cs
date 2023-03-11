@@ -1,14 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Builder : MonoBehaviour
 {
-	[Header("Test Stuff")]
-	public Buildable testBuildable;
-	public Vector3 testPosition;
-	public Quaternion testRotation;
-
 	[Header("Main")]
 	public Material buildEffectMaterial;
 	public Material deconstructEffectMaterial;
@@ -40,6 +36,12 @@ public class Builder : MonoBehaviour
 	void Awake()
 	{
 		AssignSingleton();
+	}
+
+	private void Start()
+	{
+		if (PlayerPrefs.HasKey("saveToLoad"))
+			SaveManager.Load(PlayerPrefs.GetString("saveToLoad", ""))?.ToLevel();
 	}
 
 	void AssignSingleton()
@@ -112,12 +114,12 @@ public class Builder : MonoBehaviour
 
 	public void TestSaving()
 	{
-		SaveManagment.Save("hello");
+		SaveManager.Save(CrossSceneDataKeeper.fileName);
 	}
 
 	public void TestLoading()
 	{
-		StoredLevel level = SaveManagment.Load("hello");
+		StoredLevel level = SaveManager.Load("hello");
 
 		level?.ToLevel();
 	}
