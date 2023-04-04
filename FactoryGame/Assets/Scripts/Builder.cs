@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
+using Unity.Collections;
 
-public class Builder : MonoBehaviour
+public class Builder : NetworkBehaviour
 {
 	[Header("Main")]
 	public Material buildEffectMaterial;
@@ -17,7 +19,7 @@ public class Builder : MonoBehaviour
 	public static List<string> usedBuildableUUIDs = new();
 	public static List<string> usedItemUUIDs = new();
 
-	public static Builder instance;
+	public static Builder Singleton;
 	
 	private static readonly int Smoothness = Shader.PropertyToID("_Smoothness");
 	private static readonly int Metallicness = Shader.PropertyToID("_Metallicness");
@@ -46,13 +48,13 @@ public class Builder : MonoBehaviour
 
 	void AssignSingleton()
 	{
-		if (instance != null)
+		if (Singleton != null)
 		{
 			Debug.LogError("More than one Builder script in scene.");
 			return;
 		}
 
-		instance = this;
+		Singleton = this;
 	}
 
 	public void RegenerateAllUUIDs()
@@ -72,17 +74,21 @@ public class Builder : MonoBehaviour
 		}
 	}
 
-	public void Build(BuildProperties properties, bool isLoading = false)
+	[ServerRpc(RequireOwnership = false)]
+	public void BuildServerRpc(BuildProperties properties, bool isLoading = false)
 	{
+		print("Rpc Triggered");
+
 		// Instantiate
-		lastBuilt = Instantiate(properties.buildable.prefab, buildableParent);
+		var buildable = GetBuildableByUUID(properties.buildableUUID.ToString());
+		lastBuilt = Instantiate(buildable.prefab, buildableParent);
 
 		// Relocate object
 		lastBuilt.transform.rotation = properties.rotation;
 		lastBuilt.transform.position = properties.position;
 
 		// Add "BuiltBuildable" Component and assign the buildable field
-		lastBuilt.AddComponent<BuiltBuildable>().buildable = properties.buildable;
+		lastBuilt.AddComponent<BuiltBuildable>().buildable = buildable;
 
 		if (isLoading)
 			return;
@@ -95,6 +101,8 @@ public class Builder : MonoBehaviour
 		renderer.material = buildEffectMaterial;
 		AssignProperties(oldMaterial, renderer.material);
 		renderer.material.SetFloat(Dissolve, 1f);
+
+		lastBuilt.GetComponent<NetworkObject>().Spawn();
 
 		// Start dissolving
 		StartCoroutine(buidEffect(oldMaterial, renderer));
@@ -151,25 +159,35 @@ public class Builder : MonoBehaviour
 			yield return null;
 		}
 
-		Destroy(obj);
+		obj.GetComponent<NetworkObject>().Despawn();
 	}
 
-	public void Deconstruct(GameObject obj)
+	[ServerRpc(RequireOwnership = false)]
+	public void DeconstructServerRpc(NetworkBehaviourReference objReference, ServerRpcParams serverRpcParams)
 	{
-		if (obj == null)
-			return;
+		ulong clientId = serverRpcParams.Receive.SenderClientId;
 
-		// Get old material
-		Renderer renderer = obj.GetComponent<Renderer>();
-		Material oldMaterial = renderer.material;
+		if (objReference.TryGet(out NetworkBehaviourReferenceObject bObj))
+		{
+			Debug.Log("User with the id of " + clientId.ToString() + " has deconstructed an object.");
 
-		// Assign dissolving properties
-		renderer.material = deconstructEffectMaterial;
-		AssignProperties(oldMaterial, renderer.material);
-		renderer.material.SetFloat(Dissolve, 0f);
+			var obj = bObj.gameObject;
 
-		// Start dissolving
-		StartCoroutine(deconstructEffect(obj, renderer));
+			if (obj == null)
+				return;
+
+			// Get old material
+			Renderer renderer = obj.GetComponent<Renderer>();
+			Material oldMaterial = renderer.material;
+
+			// Assign dissolving properties
+			renderer.material = deconstructEffectMaterial;
+			AssignProperties(oldMaterial, renderer.material);
+			renderer.material.SetFloat(Dissolve, 0f);
+
+			// Start dissolving
+			StartCoroutine(deconstructEffect(obj, renderer));
+		}
 	}
 
 	private static void AssignProperties(Material copyFrom, Material copyTo)
@@ -192,16 +210,23 @@ public class Builder : MonoBehaviour
 	}
 }
 
-public struct BuildProperties
+public struct BuildProperties : INetworkSerializable
 {
 	public Quaternion rotation;
 	public Vector3 position;
-	public Buildable buildable;
+	public FixedString32Bytes buildableUUID;
 
-	public BuildProperties(Quaternion rotation, Vector3 position, Buildable buildable)
+	public BuildProperties(Quaternion rotation, Vector3 position, string buildableUUID)
 	{
 		this.rotation = rotation;
 		this.position = position;
-		this.buildable = buildable;
+		this.buildableUUID = buildableUUID;
+	}
+
+	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+	{
+		serializer.SerializeValue(ref rotation);
+		serializer.SerializeValue(ref position);
+		serializer.SerializeValue(ref buildableUUID);
 	}
 }

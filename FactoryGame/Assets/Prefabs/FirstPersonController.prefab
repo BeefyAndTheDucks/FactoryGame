@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 3082989865546187497}
   - component: {fileID: 2537307575733528314}
   - component: {fileID: 5960025721557320416}
+  - component: {fileID: -4229441369105271382}
   m_Layer: 0
   m_Name: FirstPersonController
   m_TagString: Player
@@ -210,7 +211,7 @@ MonoBehaviour:
   SyncPositionY: 1
   SyncPositionZ: 1
   SyncRotAngleX: 0
-  SyncRotAngleY: 0
+  SyncRotAngleY: 1
   SyncRotAngleZ: 0
   SyncScaleX: 0
   SyncScaleY: 0
@@ -244,6 +245,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90e8aacc99082541aedee4138e3d22a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointGO: {fileID: 7006891240262742823}
+--- !u!114 &-4229441369105271382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7006891238798618416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be14fe86292c0245825f95845fe47d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deconstructMaterial: {fileID: 2100000, guid: 953317eb17c9d6c40a43b1e5ce24a92d, type: 2}
+  maxRayDistance: Infinity
+  rotationStep: {x: 0, y: 0.25881904, z: 0, w: 0.9659258}
+  deconstructTime: 1
+  deconstructBarEmpty: 975
+  deconstructBarFull: 50
+  deconstructMode: 0
+  building:
+    name: New Buildable
+    Category: {fileID: 0}
+    prefab: {fileID: 0}
+    previewPrefab: {fileID: 0}
+    BuildOffset: {x: 0, y: 0, z: 0}
+    BaseRotation: {x: 0, y: 0, z: 0, w: 0}
+    Icon: {fileID: 0}
+    UUID: 
+  lookingAtDeconstructIsNull: 0
 --- !u!1 &7006891238894616847
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,21 +10,21 @@ public class BuildMenu : MonoBehaviour
     [SerializeField] private Category[] Categories;
     [SerializeField] private Transform CategoryParent;
     [SerializeField] private Transform BuildableParent;
-    [SerializeField] private PlayerBuilder PlayerBuilder;
+    [HideInInspector] public PlayerBuilder_2_0 playerBuilder;
     [HideInInspector] public FirstPersonController Controller;
     [SerializeField] private GameObject Menu;
 
-    [HideInInspector] public static BuildMenu instance;
+    [HideInInspector] public static BuildMenu Singleton;
 
     private void AssignSingleton()
     {
-        if (instance != null)
+        if (Singleton != null)
         {
-            Debug.LogError("More than one BuildMenu script in scene.");
+            Debug.LogError("More than one " + name + " script in scene.");
             return;
         }
 
-        instance = this;
+        Singleton = this;
     }
 
 	void Awake()
@@ -34,7 +34,7 @@ public class BuildMenu : MonoBehaviour
 
 	private void Start()
     {
-        _builder = Builder.instance;
+        _builder = Builder.Singleton;
         _buildables = _builder.buildables;
         _generateCategories();
     }
@@ -65,30 +65,30 @@ public class BuildMenu : MonoBehaviour
             if (buildable.Category != category)
                 continue;
             
-            var newCategory = Instantiate(BuildMenuItemPrefab, BuildableParent);
-            newCategory.image.sprite = buildable.Icon;
-            newCategory.onClick.AddListener(() => _onBuildableButtonClick(buildable));
+            var newBuildable = Instantiate(BuildMenuItemPrefab, BuildableParent);
+            newBuildable.image.sprite = buildable.Icon;
+            newBuildable.onClick.AddListener(() => _onBuildableButtonClick(buildable));
         }
     }
 
     private void _onBuildableButtonClick(Buildable buildable)
     {
-        PlayerBuilder.building = buildable;
+        playerBuilder.building = buildable;
         _toggleBuildMenu();
     }
 
     private void Update()
     {
         if (Input.GetButtonDown("Build"))
-            if ((PlayerBuilder.building == null || PlayerBuilder.building.prefab == null))
+            if ((playerBuilder.building == null || playerBuilder.building.prefab == null))
                 _toggleBuildMenu();
-            else if (PlayerBuilder.deconstructMode)
+            else if (playerBuilder.deconstructMode)
             {
-                PlayerBuilder.ExitBuildMode();
+                playerBuilder.ExitBuildMode();
                 _toggleBuildMenu();
             }
             else
-                PlayerBuilder.ExitBuildMode();
+                playerBuilder.ExitBuildMode();
 
         if (Input.GetButtonDown("Exit Build Mode"))
         {

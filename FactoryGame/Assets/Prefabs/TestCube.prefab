@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 40617477742249207}
   - component: {fileID: 8873641043983806766}
   - component: {fileID: 340732830513935579}
+  - component: {fileID: 4975489773165365493}
   - component: {fileID: 8494359418298697010}
   m_Layer: 0
   m_Name: TestCube
@@ -99,6 +100,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2222346464153789849, guid: ab6d3d53c8876bf49a6107470068e7fb, type: 3}
+--- !u!114 &4975489773165365493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5003032176560962062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee2d8a9f86c1d484aa21d7853b963259, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8494359418298697010
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
+	public GameObject jointGO;
+
 	public override void OnNetworkSpawn()
 	{
-		base.OnNetworkSpawn();
-
-		if (!IsOwner)
+		jointGO.SetActive(IsOwner);
+		if (IsOwner)
 		{
-			Destroy(GetComponent<FirstPersonController>());
-			Destroy(GetComponent<Camera>());
-			Destroy(this);
-		} else {
-			BuildMenu.instance.Controller = GetComponent<FirstPersonController>();
+			BuildMenu.Singleton.Controller = GetComponent<FirstPersonController>();
+			BuildMenu.Singleton.playerBuilder = GetComponent<PlayerBuilder_2_0>();
 		}
 	}
 }

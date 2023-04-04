@@ -1,9 +1,9 @@
-using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class BuiltBuildable : MonoBehaviour
+public class BuiltBuildable : NetworkBehaviour
 {
     public Buildable buildable;
 
@@ -12,19 +12,27 @@ public class BuiltBuildable : MonoBehaviour
 
     private Material _originalMaterial;
     private Renderer _renderer;
-    private PlayerBuilder _plBuilder;
+    private List<PlayerBuilder_2_0> _plBuilders;
 
     private void Update()
     {
-        if (_renderer.sharedMaterial != _originalMaterial && _renderer.sharedMaterial != _plBuilder.deconstructMaterial)
+        if (!IsSpawned) return;
+        if (_plBuilders == null) return;
+        if (_plBuilders.Count < 1) return;
+        
+        if (_renderer.sharedMaterial != _originalMaterial && _renderer.sharedMaterial != _plBuilders[0].deconstructMaterial)
             _originalMaterial = _renderer.sharedMaterial;
-        _renderer.sharedMaterial = (_plBuilder.lookingAtDeconstruct == gameObject && showMaterial && !isDeconstructing) ? _plBuilder.deconstructMaterial : _originalMaterial;
+        _renderer.sharedMaterial = (_plBuilders.Any(player => player.LookingAtDeconstruct == gameObject) && showMaterial && !isDeconstructing) ? _plBuilders[0].deconstructMaterial : _originalMaterial;
     }
 
-    private void Start()
-    {
-        _plBuilder = PlayerBuilder.instance;
+    public override void OnNetworkSpawn()
+	{
+        _plBuilders = GameManager.Singleton.AllPlayerBuilders;
+        GameManager.Singleton.OnNewPlayerAdded.Value += OnNewPlayerBuilderConnectedClientRpc;
         _renderer = GetComponent<Renderer>();
         _originalMaterial = _renderer.sharedMaterial;
     }
+    
+    [ClientRpc]
+    private void OnNewPlayerBuilderConnectedClientRpc() => _plBuilders = GameManager.Singleton.AllPlayerBuilders;
 }

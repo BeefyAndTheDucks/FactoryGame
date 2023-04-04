@@ -8,13 +8,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 #if UNITY_EDITOR
 using UnityEditor;
 using System.Net;
 #endif
 
-public class FirstPersonController : MonoBehaviour
+public class FirstPersonController : NetworkBehaviour
 {
     private Rigidbody rb;
 
@@ -131,9 +132,14 @@ public class FirstPersonController : MonoBehaviour
     private Vector3 jointOriginalPos;
     private float timer = 0;
 
-    #endregion
+	#endregion
 
-    private void Awake()
+	public override void OnNetworkSpawn()
+	{
+        enabled = IsOwner;
+	}
+
+	private void Awake()
     {
         rb = GetComponent<Rigidbody>();
 

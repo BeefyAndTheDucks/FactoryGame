@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 /// <summary>
-/// You cannot store this with a binary formatter!
+/// A Class storing important data for a buildable
 /// </summary>
 [System.Serializable]
 public class Buildable

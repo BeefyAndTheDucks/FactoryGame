@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Unity.Netcode;
 
-public class PlayerBuilder : MonoBehaviour
+public class PlayerBuilder : NetworkBehaviour
 {
 	public Material deconstructMaterial;
 
@@ -13,18 +13,18 @@ public class PlayerBuilder : MonoBehaviour
     private GameObject _current;
     private Quaternion _rotation = Quaternion.identity;
     private Vector3 _buildPos = Vector3.zero;
-    private GameObject _lookingAt;
+    private NetworkVariable<NetworkObjectReference> _lookingAt = new(writePerm: NetworkVariableWritePermission.Owner);
     private float _deconstructDeltaLeft;
     private float _deconstructPercentage;
+    private GameObject _deconstructBar;
+    private RectTransform _deconstructBarProgress;
+    private Transform _previewParent;
 
-    private bool LookingAtIsNull => _lookingAt == null;
+    private bool LookingAtIsNull => _lookingAt.Value.TryGet(out _) == false;
 
     [SerializeField] private float maxDistance = Mathf.Infinity;
-    [SerializeField] private Transform previewParent;
     [SerializeField] private Quaternion rotationStep;
     [SerializeField] private float deconstructTime;
-    [SerializeField] private GameObject deconstructBar;
-    [SerializeField] private RectTransform deconstructBarProgress;
     [SerializeField] private float deconstructBarEmpty = 975;
     [SerializeField] private float deconstructBarFull = 50;
 
@@ -34,19 +34,24 @@ public class PlayerBuilder : MonoBehaviour
 
     public static PlayerBuilder instance;
 
-    private void Awake()
-	{
+	public override void OnNetworkSpawn() {
+        enabled = IsOwner;
+
         _camera = Camera.main;
         _deconstructDeltaLeft = deconstructTime;
         building = null;
+        _deconstructBar = PlayerBuilderReferences.Singleton.deconstructBar;
+        _deconstructBarProgress = PlayerBuilderReferences.Singleton.deconstructBarProgress;
+        _previewParent = PlayerBuilderReferences.Singleton.previewParent;
+
         AssignSingleton();
-	}
-    
-    private void AssignSingleton()
+    }
+
+	private void AssignSingleton()
     {
 	    if (instance != null)
 	    {
-		    Debug.LogError("More than one Builder script in scene.");
+		    Debug.LogError("More than one " + name + " script in scene.");
 		    return;
 	    }
 
@@ -69,7 +74,7 @@ public class PlayerBuilder : MonoBehaviour
 		{
             Debug.DrawLine(ray.origin, hit.point, Color.green);
             
-            _lookingAt = hit.transform.gameObject;
+            _lookingAt.Value = new(hit.transform.gameObject);
 
             if (building != null && building.previewPrefab != null)
 			{
@@ -78,7 +83,7 @@ public class PlayerBuilder : MonoBehaviour
 				{
                     if (_current != null)
                         Destroy(_current);
-                    _current = Instantiate(building.previewPrefab, previewParent);
+                    _current = Instantiate(building.previewPrefab, _previewParent);
                     _rotation = building.BaseRotation;
                     _isNew = false;
                 }
@@ -93,10 +98,12 @@ public class PlayerBuilder : MonoBehaviour
 		{
             if (_current != null)
                 _current.SetActive(false);
-            _lookingAt = null;
+            _lookingAt.Value = new();
 		}
 
-        lookingAtDeconstruct = deconstructMode ? _lookingAt : null;
+        NetworkObject _;
+        var success = _lookingAt.Value.TryGet(out _);
+        lookingAtDeconstruct = deconstructMode && success ? _.gameObject : null;
         
         _last = building;
     }
@@ -107,12 +114,14 @@ public class PlayerBuilder : MonoBehaviour
 		{
             if (building != null && building.prefab != null && !deconstructMode)
 			{
-                BuildProperties properties = new BuildProperties(_rotation, _buildPos, building);
-                Builder.instance.Build(properties);
+                BuildProperties properties = new BuildProperties(_rotation, _buildPos, building.UUID);
+                Builder.Singleton.BuildServerRpc(properties);
 			}
 		}
 
-		var builtBuildable = (LookingAtIsNull) ? null : _lookingAt.GetComponent<BuiltBuildable>();
+        NetworkObject _;
+        _lookingAt.Value.TryGet(out _);
+        var builtBuildable = (LookingAtIsNull) ? null : _.GetComponent<BuiltBuildable>();
 
 		if (Input.GetButton("Place"))
 		{
@@ -121,7 +130,7 @@ public class PlayerBuilder : MonoBehaviour
 				if (_deconstructDeltaLeft == 0)
 				{
 					if (builtBuildable != null) builtBuildable.isDeconstructing = true;
-					Builder.instance.Deconstruct(lookingAtDeconstruct);
+					Builder.Singleton.DeconstructServerRpc(lookingAtDeconstruct.GetComponent<NetworkBehaviourReferenceObject>(), default);
 					_deconstructDeltaLeft = Mathf.Infinity;
 				}
 				else
@@ -130,8 +139,8 @@ public class PlayerBuilder : MonoBehaviour
 					_deconstructDeltaLeft = Mathf.Clamp(_deconstructDeltaLeft, 0, deconstructTime);
 					_deconstructPercentage = Map(_deconstructDeltaLeft, 0, deconstructTime, deconstructBarEmpty,deconstructBarFull);
 
-					deconstructBarProgress.offsetMax =
-						new Vector2(-_deconstructPercentage, deconstructBarProgress.offsetMax.y);
+                    _deconstructBarProgress.offsetMax =
+						new Vector2(-_deconstructPercentage, _deconstructBarProgress.offsetMax.y);
 				}
 			}
 		}
@@ -156,9 +165,9 @@ public class PlayerBuilder : MonoBehaviour
 
         if (Input.GetButtonDown("Pick"))
         {
-	        if (_lookingAt != null)
+	        if (_.gameObject != null)
 	        {
-		        var buildable = _lookingAt.GetComponent<BuiltBuildable>();
+		        var buildable = _.GetComponent<BuiltBuildable>();
 		        if (buildable != null)
 		        {
                     deconstructMode = false;
@@ -167,7 +176,7 @@ public class PlayerBuilder : MonoBehaviour
 	        }
         }
         
-        deconstructBar.SetActive(deconstructMode && Input.GetButton("Place") && !LookingAtIsNull && builtBuildable != null && !builtBuildable.isDeconstructing);
+        _deconstructBar.SetActive(deconstructMode && Input.GetButton("Place") && !LookingAtIsNull && builtBuildable != null && !builtBuildable.isDeconstructing);
 
         _rotation.eulerAngles += (rotationStep.eulerAngles * Input.GetAxis("Rotate"));
 	}

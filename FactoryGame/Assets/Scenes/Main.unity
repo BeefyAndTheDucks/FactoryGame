@@ -322,7 +322,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cc64e486418cbe7468baab365d5f6d65, type: 2}
   CategoryParent: {fileID: 977896471}
   BuildableParent: {fileID: 1826131309}
-  PlayerBuilder: {fileID: 1162994833}
+  playerBuilder: {fileID: 0}
   Controller: {fileID: 0}
   Menu: {fileID: 95590649}
 --- !u!1 &617954638
@@ -717,11 +717,6 @@ MonoBehaviour:
       OverridingTargetPrefab: {fileID: 0}
     - Override: 0
       Prefab: {fileID: 5003032176560962062, guid: 745f5d069ef4aac478d19eb01eb68e52, type: 3}
-      SourcePrefabToOverride: {fileID: 0}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
-    - Override: 0
-      Prefab: {fileID: 5003032176560962062, guid: 169767ce2b39f2049ac214aa9c1f0457, type: 3}
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
       OverridingTargetPrefab: {fileID: 0}
@@ -1129,9 +1124,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1162994827}
+  - component: {fileID: 1162994835}
   - component: {fileID: 1162994831}
   - component: {fileID: 1162994828}
-  - component: {fileID: 1162994833}
+  - component: {fileID: 1162994836}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1193,9 +1189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a51ccd44df0170c41ad0d1a04444b0eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HeartsParent: {fileID: 0}
-  GameOverGameObject: {fileID: 0}
---- !u!114 &1162994833
+--- !u!114 &1162994835
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1204,29 +1198,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 1162994825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df09e162e59733e41be5bf4803bcee6d, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deconstructMaterial: {fileID: 2100000, guid: 953317eb17c9d6c40a43b1e5ce24a92d, type: 2}
-  maxDistance: Infinity
-  previewParent: {fileID: 666191466}
-  rotationStep: {x: 0, y: 0.1305262, z: 0, w: 0.9914449}
-  deconstructTime: 1
+  GlobalObjectIdHash: 2455365850
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
+--- !u!114 &1162994836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162994825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e6bf7062c743b74088c8431e126e6d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   deconstructBar: {fileID: 1276300481}
   deconstructBarProgress: {fileID: 843824727}
-  deconstructBarEmpty: 975
-  deconstructBarFull: 50
-  deconstructMode: 0
-  lookingAtDeconstruct: {fileID: 0}
-  building:
-    name: New Buildable
-    Category: {fileID: 0}
-    prefab: {fileID: 0}
-    previewPrefab: {fileID: 0}
-    BuildOffset: {x: 0, y: 0, z: 0}
-    BaseRotation: {x: 0, y: 0, z: 0, w: 0}
-    Icon: {fileID: 0}
-    UUID: 
+  previewParent: {fileID: 666191466}
+  mode: 1
 --- !u!1 &1262293608
 GameObject:
   m_ObjectHideFlags: 0
@@ -1364,6 +1358,7 @@ GameObject:
   - component: {fileID: 1278103115}
   - component: {fileID: 1278103114}
   - component: {fileID: 1278103113}
+  - component: {fileID: 1278103116}
   m_Layer: 0
   m_Name: Chunk
   m_TagString: Untagged
@@ -1450,6 +1445,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1278103111}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1278103116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278103111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 472937503
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1279297050
 GameObject:
   m_ObjectHideFlags: 0
